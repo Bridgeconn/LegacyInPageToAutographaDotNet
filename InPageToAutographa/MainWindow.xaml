@@ -5,8 +5,91 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Inpage to Autographa" Height="500" Width="525" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
+            <TabItem Header="▶ About">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock Margin="10" TextWrapping="Wrap">A bit of an introduction and perhaps a broad set of guidelines. Also a contact email-id for any queries could go here.</TextBlock>
+                </Grid>
+
+            </TabItem>
+            <TabItem  Header="⚙ InPage" Background="White">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="106,41,105,41">
+                        <CheckBox Margin="10">Test 1</CheckBox>
+                        <CheckBox Margin="10">Test 2</CheckBox>
+                        <CheckBox Margin="10">Test 3</CheckBox>
+                        <CheckBox Margin="10">Test 4</CheckBox>
+                        <CheckBox Margin="10">Test 5</CheckBox>
+                        <CheckBox Margin="10">Test 6</CheckBox>
+                    </WrapPanel>
+                    <ListBox  Grid.Column="0" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="10,0,10,0" />
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
+                        <Button Margin="10" Padding="2,3,4,5" Content="Select InPage Files" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center" />
+                        <Button Margin="10" Padding="2,3,4,5"  Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="⚙ USFM">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <CheckBox Margin="10">Test 1</CheckBox>
+                        <CheckBox Margin="10">Test 2</CheckBox>
+                        <CheckBox Margin="10">Test 3</CheckBox>
+                        <CheckBox Margin="10">Test 4</CheckBox>
+                        <CheckBox Margin="10">Test 5</CheckBox>
+                        <CheckBox Margin="10">Test 6</CheckBox>
+                    </WrapPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" >
+                        <Button Margin="10" Padding="2,3,4,5"  Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="◫ Output">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height=".25*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height=".25*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Converted Files</TextBlock>
+                    <ListBox  HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="10,0,10,0" />
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Recently Converted Files</TextBlock>
+                    <ListBox  HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Margin="10,0,10,0" />
+
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="✪ FAQ">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock Margin="10" TextWrapping="Wrap">Detailed set of topical guidelines can go here as a FAQ section.</TextBlock>
+                </Grid>
+
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>
