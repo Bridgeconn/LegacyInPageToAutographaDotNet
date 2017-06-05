@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace UnicodeConverter
 {
-    class CharacterMap
+    public static class CharacterMap
     {
 
         public static Hashtable ip2uc = new Hashtable();
@@ -428,7 +428,7 @@ namespace UnicodeConverter
             return rtnVal;
         }
 
-        public static int findStartPosition(byte[] bData)
+        public static int FindStartPosition(byte[] bData)
         {
 
             for (int i = 0; i <= bData.Length - 1; i++)
@@ -451,7 +451,7 @@ namespace UnicodeConverter
             return -1;
         }
 
-        public static int findEndPosition(byte[] bData, int start)
+        public static int FindEndPosition(byte[] bData, int start)
         {
             for (int i = start; i <= bData.Length - 1; i++)
             {

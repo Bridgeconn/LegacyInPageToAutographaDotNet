@@ -62,6 +62,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConverterViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -92,6 +93,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnicodeConverter\UnicodeConverter.csproj">
+      <Project>{62648e5a-e877-49c3-9ef3-be06fbec62ae}</Project>
+      <Name>UnicodeConverter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\USFMConverter\USFMConverter.csproj">
+      <Project>{44dae0ed-61cc-4d94-a26d-b7072a1231b8}</Project>
+      <Name>USFMConverter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
