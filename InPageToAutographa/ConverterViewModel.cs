@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,12 +9,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using UnicodeConverter;
 
-/*
 namespace InPageToAutographa
 {
-    class ConverterViewModel
+    public class ConverterViewModel : ObservableObject
     {
 
         string sourceFName;
@@ -37,6 +38,98 @@ namespace InPageToAutographa
         [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         public static extern int UnregisterHotKey(IntPtr hwnd, int id);
 
+        private string btnConvertText;
+        private bool isProgressBarVisible;
+        private BackgroundWorker bgw;
+        private BackgroundWorker bgw4_new;
+        private int progressBarValue;
+        private bool rbtnUrduChecked;
+
+        public int ProgressBarValue
+        {
+            get
+            {
+                return progressBarValue;
+            }
+            set
+            {
+                progressBarValue = value;
+                RaisePropertyChangedEvent("ProgressBarValue");
+            }
+        }
+
+        public string BtnConvertText
+        {
+            get => btnConvertText;
+            set
+            {
+                btnConvertText = value;
+                RaisePropertyChangedEvent("BtnConvertText");
+            }
+        }
+
+        public bool IsProgressBarVisible
+        {
+            get => isProgressBarVisible;
+            set
+            {
+                isProgressBarVisible = value;
+                RaisePropertyChangedEvent("IsProgressBarVisible");
+            }
+        }
+        private bool checkboxYieChecked;
+        private bool checkboxKashidaChecked;
+        private bool checkboxChangePChecked;
+        private bool checkboxChangeCCChecked;
+        private bool checkboxReverseSSignChecked;
+        private bool checkboxThousSeparatorChecked;
+        private bool checkboxQuotMarksChecked;
+        private bool checkboxWawHamzaChecked;
+        private bool checkboxHehHamzaChecked;
+        private bool checkboxRDigitsChecked;
+        private bool checkboxYearSignChecked;
+        private bool checkboxRErabsChecked;
+        private bool checkboxRKashidaChecked;
+        private bool checkboxRDoubleSpaceChecked;
+        private bool checkboxBariYeeChecked;
+        private bool CheckboxBYieChecked
+        {
+            get
+            {
+                return checkboxYieChecked;
+            }
+
+            set
+            {
+                checkboxYieChecked = value;
+                RaisePropertyChangedEvent("CheckboxYieChecked");
+            }
+        }
+
+        public bool CheckboxKashidaChecked { get { return checkboxKashidaChecked; } set { checkboxKashidaChecked = value; RaisePropertyChangedEvent("CheckboxKashidaChecked"); } }
+        public bool CheckboxChangePChecked { get { return checkboxChangePChecked; } set { checkboxChangePChecked = value; RaisePropertyChangedEvent("CheckboxChangePChecked"); } }
+        public bool CheckboxChangeCCChecked { get { return checkboxChangeCCChecked; } set { checkboxChangeCCChecked = value; RaisePropertyChangedEvent("CheckboxChangeCCChecked"); } }
+        public bool CheckboxReverseSSignChecked { get { return checkboxReverseSSignChecked; } set { checkboxReverseSSignChecked = value; RaisePropertyChangedEvent("CheckboxReverseSSignChecked"); } }
+        public bool CheckboxThousSeparatorChecked { get { return checkboxThousSeparatorChecked; } set { checkboxThousSeparatorChecked = value; RaisePropertyChangedEvent("CheckboxThousSeparatorChecked"); } }
+        public bool CheckboxQuotMarksChecked { get { return checkboxQuotMarksChecked; } set { checkboxQuotMarksChecked = value; RaisePropertyChangedEvent("CheckboxQuotMarksChecked"); } }
+        public bool CheckboxWawHamzaChecked { get { return checkboxWawHamzaChecked; } set { checkboxWawHamzaChecked = value; RaisePropertyChangedEvent("CheckboxWawHamzaChecked"); } }
+        public bool CheckboxHehHamzaChecked { get { return checkboxHehHamzaChecked; } set { checkboxHehHamzaChecked = value; RaisePropertyChangedEvent("CheckboxHehHamzaChecked"); } }
+        public bool CheckboxRDigitsChecked { get { return checkboxRDigitsChecked; } set { checkboxRDigitsChecked = value; RaisePropertyChangedEvent("CheckboxRDigitsChecked"); } }
+        public bool CheckboxYearSignChecked { get { return checkboxYearSignChecked; } set { checkboxYearSignChecked = value; RaisePropertyChangedEvent("CheckboxYearSignChecked"); } }
+        public bool CheckboxRErabsChecked { get { return checkboxRErabsChecked; } set { checkboxRErabsChecked = value; RaisePropertyChangedEvent("CheckboxRErabsChecked"); } }
+        public bool CheckboxRKashidaChecked { get { return checkboxRKashidaChecked; } set { checkboxRKashidaChecked = value; RaisePropertyChangedEvent("CheckboxRKashidaChecked"); } }
+        public bool CheckboxRDoubleSpaceChecked { get { return checkboxRDoubleSpaceChecked; } set { checkboxRDoubleSpaceChecked = value; RaisePropertyChangedEvent("CheckboxRDoubleSpaceChecked"); } }
+        public bool CheckboxBariYeeChecked { get { return checkboxBariYeeChecked; } set { checkboxBariYeeChecked = value; RaisePropertyChangedEvent("CheckboxBariYeeChecked"); } }
+
+        public ConverterViewModel()
+        {
+            CharacterMap.initIp2ucCharacter();
+            CharacterMap.init_cpinpage2unicode();
+            CharacterMap.init_cpunicode2inpage();
+
+            bgw = new BackgroundWorker();
+        }
+
         private void WriteStatusMessage(string message)
         {
             //TODO: 
@@ -54,24 +147,24 @@ namespace InPageToAutographa
                 {
                     WriteStatusMessage("Error opening a file");
                     MessageBox.Show("Please select a inpage file");
-                    txtSourceLocation.Text = "";
-                    txtTatgetLocation.Text = "";
-                    btnConvert.Enabled = false;
-                    btnOpenFile.Enabled = false;
-                    btnFConvert.Enabled = false;
+                    //txtSourceLocation.Text = "";
+                    //txtTatgetLocation.Text = "";
+                    //ButtonConvertEnabled = false;
+                    //ButtonOpenFileEnabled = false;
+                    //btnFConvert.Enabled = false;
                 }
                 else
                 {
-                    txtSourceLocation.Text = OFD.FileName;
+                    //txtSourceLocation.Text = OFD.FileName;
                     sourceFName = OFD.FileName;
-                    txtTatgetLocation.Text = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_convert.txt";
-                    targetFName = txtTatgetLocation.Text;
+                    //txtTatgetLocation.Text = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_convert.txt";
+                    //targetFName = txtTatgetLocation.Text;
                     targetFName_Sp = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_with_out_spaces.txt";
                     WriteStatusMessage("Ready to convert");
-                    btnConvert.Enabled = true;
-                    btnFConvert.Enabled = true;
-                    btnInPageFile.Enabled = false;
-                    btnOpenFile.Enabled = false;
+                    //ButtonConvertEnabled = true;
+                    //btnFConvert.Enabled = true;
+                    //ButtonInPageFileEnabled = false;
+                    //ButtonOpenFileEnabled = false;
                 }
             }
             else
@@ -80,15 +173,20 @@ namespace InPageToAutographa
             }
         }
 
-        private void btnConvert_Click(System.Object sender, System.EventArgs e)
+        public ICommand ConvertTextCommand
         {
-            if (btnConvert.Text == "Cancel")
+            get { return new DelegateCommand(btnConvert_Click); }
+        }
+
+        private void btnConvert_Click()
+        {
+            if (BtnConvertText == "Cancel")
             {
                 MessageBoxResult msgResult = MessageBox.Show("Do you want cancel the converting?", "Cancel ?", MessageBoxButton.YesNo);
                 if (msgResult == MessageBoxResult.Yes)
                 {
                     cancel_test = true;
-                    btnConvert.Text = "Convert";
+                    BtnConvertText = "Convert";
                 }
             }
             else
@@ -104,8 +202,12 @@ namespace InPageToAutographa
                     br.Close();
                     fStream.Close();
                     WriteStatusMessage("Converting ... ");
-                    pb.Visible = true;
-                    btnConvert.Text = "Cancel";
+                    IsProgressBarVisible = true;
+                    BtnConvertText = "Cancel";
+                    bgw.WorkerReportsProgress = true;
+                    bgw.DoWork += bgw_DoWork;
+                    bgw.ProgressChanged += bgw_ProgressChanged;
+                    bgw.RunWorkerCompleted += bgw_RunWorkerCompleted;
                     bgw.RunWorkerAsync();
                 }
                 catch (Exception ex)
@@ -136,7 +238,7 @@ namespace InPageToAutographa
                     }
                     else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128) | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184 | binaryData[i + 3] == 185 | binaryData[i + 3] == 200 | binaryData[i + 3] == 201))
                     {
-                        if (chkBYie.Checked == true)
+                        if (CheckboxBYieChecked == true)
                         {
                             outPut += Convert.ToChar(1740).ToString();
                             //bari-ya ? convert to  ? ?  
@@ -152,7 +254,7 @@ namespace InPageToAutographa
                             }
                         }
                     }
-                    else if (binaryData[i + 1] == 161 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | binaryData[i + 2] == 9 | CharacterMap.FindHamzaPosition(i + 3) == false | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
+                    else if (binaryData[i + 1] == 161 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | binaryData[i + 2] == 9 | FindHamzaPosition(i + 3) == false | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
                     {
                         outPut += Convert.ToChar(1722).ToString();
                         // add space after ?  noon guna
@@ -162,15 +264,15 @@ namespace InPageToAutographa
                     else if (((binaryData[i + 1] == 177) & (binaryData[i + 3] == 177)))
                     {
                         //  remove 1 jazam 
-                        outPut += Convert.ToChar(ip2uc.Item[Convert.ToInt32(binaryData[i + 1])]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
                         i += 3;
                     }
                     else if (binaryData[i + 1] == 169 & !(binaryData[i + 3] == 169))
                     {
                         // //  extra character  " tatbeeq "  pass this character 
-                        if (chkKashida.Checked)
+                        if (CheckboxKashidaChecked)
                         {
-                            outPut += Convert.ToChar(ip2uc.Item[Convert.ToInt32(binaryData[i + 1])]).ToString();
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
                             i += 1;
                         }
                         else
@@ -178,33 +280,33 @@ namespace InPageToAutographa
                             i += 1;
                         }
                     }
-                    else if (binaryData[i + 1] == 166 & outPut.Last == Convert.ToChar(1574).ToString())
+                    else if (binaryData[i + 1] == 166 & outPut[outPut.Length - 1].ToString() == Convert.ToChar(1574).ToString())
                     {
                         //remove ya-hamza  before hamza
                         outPut = outPut.Remove(outPut.Length - 1, 1);
-                        outPut += Convert.ToChar(ip2uc.Item[166]).ToString();
-                        outPut += Convert.ToChar(ip2uc.Item[191]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[166]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[191]).ToString();
                         i += 1;
                     }
                     else if (binaryData[i + 1] == 253 | binaryData[i + 1] == 254)
                     {
                         //  Change " 
-                        if (chkChangeCC.Checked == true)
+                        if (CheckboxChangeCCChecked == true)
                         {
                             if (binaryData[i + 1] == 253)
                             {
-                                outPut += Convert.ToChar(ip2uc.Item[254]).ToString();
+                                outPut += Convert.ToChar(CharacterMap.ip2uc[254]).ToString();
                                 i += 1;
                             }
                             else
                             {
-                                outPut += Convert.ToChar(ip2uc.Item[253]).ToString();
+                                outPut += Convert.ToChar(CharacterMap.ip2uc[253]).ToString();
                                 i += 1;
                             }
                         }
                         else
                         {
-                            outPut += Convert.ToChar(ip2uc.Item[Convert.ToInt32(binaryData[i + 1])].ToString();
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]);
                             i += 1;
                         }
 
@@ -212,22 +314,22 @@ namespace InPageToAutographa
                     else if (binaryData[i + 1] == 224)
                     {
                         // ... double  
-                        outPut += Convert.ToChar(ip2uc.Item[224]).ToString();
-                        outPut += Convert.ToChar(ip2uc.Item[224]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[224]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[224]).ToString();
                         i += 1;
                     }
                     else if (binaryData[i + 1] == 184 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | binaryData[i + 2] == 9 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
                     {
                         // add space after ?
-                        outPut += Convert.ToChar(ip2uc.Item[184]).ToString();
-                        outPut += Convert.ToChar(ip2uc.Item[32]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[184]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[32]).ToString();
                         i += 1;
                     }
-                    else if (((binaryData[i + 1] == 162 | binaryData[i + 1] == 182) & outPut.Last == Convert.ToChar(1574).ToString()))
+                    else if (((binaryData[i + 1] == 162 | binaryData[i + 1] == 182) & outPut[outPut.Length - 1].ToString() == Convert.ToChar(1574).ToString()))
                     {
                         //remove ya-hamza befor wao-haza or wao
                         outPut = outPut.Remove(outPut.Length - 1, 1);
-                        outPut += Convert.ToChar(ip2uc.Item[182]).ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[182]).ToString();
                         i += 1;
                     }
                     else if ((218 > binaryData[i + 1] & binaryData[i + 1] > 207) & ((218 > binaryData[i + 3] & binaryData[i + 3] > 207) | (binaryData[i + 3] == 223 | binaryData[i + 2] == 47)))
@@ -243,7 +345,7 @@ namespace InPageToAutographa
                             }
                             else
                             {
-                                temValue += Convert.ToChar(ip2uc.Item[Convert.ToInt32(binaryData[i + 1])].ToString();
+                                temValue += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])].ToString());
                             }
 
                             if (binaryData[i + 1] == 47 | binaryData[i] == 47)
@@ -256,9 +358,9 @@ namespace InPageToAutographa
                             }
 
                         }
-                        if (chkChangeP.Checked == false)
+                        if (CheckboxChangePChecked == false)
                         {
-                            outPut += ChangePositon(temValue);
+                            outPut += CharacterMap.ChangePositon(temValue);
                         }
                         else
                         {
@@ -268,7 +370,7 @@ namespace InPageToAutographa
                     }
                     else
                     {
-                        outPut += Convert.ToChar(ip2uc.Item[Convert.ToInt32(binaryData[i + 1])].ToString();
+                        outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]);
                         i += 1;
                     }
 
@@ -303,7 +405,7 @@ namespace InPageToAutographa
                             my_tempVar += Convert.ToChar(binaryData[i]).ToString();
                             i += 1;
                         }
-                        if (chkChangeP.Checked == false)
+                        if (CheckboxChangePChecked == false)
                         {
                             outPut += CharacterMap.ChangePositon(my_tempVar);
                         }
@@ -359,7 +461,7 @@ namespace InPageToAutographa
 
         private void bgw_ProgressChanged(System.Object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            pb.Value = e.ProgressPercentage;
+            ProgressBarValue = e.ProgressPercentage;
         }
 
         private void bgw_RunWorkerCompleted(System.Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -367,8 +469,8 @@ namespace InPageToAutographa
             if (cancel_test)
             {
                 WriteStatusMessage("Process is canceled by the user");
-                pb.Value = 0;
-                pb.Visible = false;
+                ProgressBarValue = 0;
+                IsProgressBarVisible = false;
                 outPut = " ";
                 outPut_Sp = "";
                 start_test = false;
@@ -378,11 +480,11 @@ namespace InPageToAutographa
             else
             {
                 WriteStatusMessage("File is successfully converted");
-                pb.Value = 0;
-                pb.Visible = false;
-                btnOpenFile.Enabled = true;
-                btnInPageFile.Enabled = true;
-                btnConvert.Text = "Convert";
+                ProgressBarValue = 0;
+                IsProgressBarVisible = false;
+                //ButtonOpenFileEnabled = true;
+                //ButtonInPageFileEnabled = true;
+                BtnConvertText = "Convert";
             }
         }
 
@@ -496,7 +598,7 @@ namespace InPageToAutographa
 
             for (int i = 0; i <= removeSpaces.Length - 1; i++)
             {
-                outPut_Sp = string.Replace(outPut_Sp, removeSpaces[i] + " ", removeSpaces[i]);
+                outPut_Sp = outPut_Sp.Replace(removeSpaces[i].ToString() + " ", removeSpaces[i].ToString());
             }
             outPut = Regex.Replace(outPut, "[ ]+[ ]", " ");
             try
@@ -510,75 +612,75 @@ namespace InPageToAutographa
 
         }
 
-        private void frmInPageConverter_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
-        {
-            NotifyIcon1.Dispose();
-            UnregisterHotKey(this.Handle, 100);
-            UnregisterHotKey(this.Handle, 200);
-            UnregisterHotKey(this.Handle, 300);
+        //private void frmInPageConverter_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        //{
+        //    //NotifyIcon1.Dispose();
+        //    //UnregisterHotKey(this.Handle, 100);
+        //    //UnregisterHotKey(this.Handle, 200);
+        //    //UnregisterHotKey(this.Handle, 300);
 
-        }
+        //}
 
-        private void frmInPageConverter_Load(System.Object sender, System.EventArgs e)
-        {
+        //private void frmInPageConverter_Load(System.Object sender, System.EventArgs e)
+        //{
 
-            try
-            {
+        //    try
+        //    {
 
-                Rectangle WArea = SystemInformation.WorkingArea;
-                int x = (WArea.Width - this.Width) / 2;
-                this.Location = new Point(x, 200);
-                RegisterHotKey(this.Handle, 100, altKey + ctrlKey, Keys.I);
-                RegisterHotKey(this.Handle, 200, altKey + ctrlKey, Keys.U);
-                RegisterHotKey(this.Handle, 300, altKey + ctrlKey, Keys.A);
-                CharacterMap.initIp2ucCharacter();
-                CharacterMap.init_cpinpage2unicode();
-                CharacterMap.init_cpunicode2inpage();
-                NotifyIcon1.Visible = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        //        Rectangle WArea = SystemInformation.WorkingArea;
+        //        int x = (WArea.Width - this.Width) / 2;
+        //        this.Location = new Point(x, 200);
+        //        RegisterHotKey(this.Handle, 100, altKey + ctrlKey, Keys.I);
+        //        RegisterHotKey(this.Handle, 200, altKey + ctrlKey, Keys.U);
+        //        RegisterHotKey(this.Handle, 300, altKey + ctrlKey, Keys.A);
+        //        CharacterMap.initCharacterMap.ip2ucCharacter();
+        //        CharacterMap.init_cpinpage2unicode();
+        //        CharacterMap.init_cpunicode2inpage();
+        //        NotifyIcon1.Visible = false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
 
-        }
+        //}
 
-        private void btnOpenFile_Click(System.Object sender, System.EventArgs e)
-        {
-            try
-            {
-                Process.Start(targetFName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + " : " + targetFName);
-            }
+        //private void btnOpenFile_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    try
+        //    {
+        //        Process.Start(targetFName);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message + " : " + targetFName);
+        //    }
 
-        }
+        //}
 
-        private void btnRemoveSpacesFile_Click(System.Object sender, System.EventArgs e)
-        {
-            try
-            {
-                Process.Start(targetFName_Sp);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + " : " + targetFName);
-            }
-        }
+        //private void btnRemoveSpacesFile_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    try
+        //    {
+        //        Process.Start(targetFName_Sp);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message + " : " + targetFName);
+        //    }
+        //}
 
-        private void btnInPageFile_Click(System.Object sender, System.EventArgs e)
-        {
-            try
-            {
-                Process.Start(sourceFName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + " : " + targetFName);
-            }
-        }
+        //private void btnInPageFile_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    try
+        //    {
+        //        Process.Start(sourceFName);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message + " : " + targetFName);
+        //    }
+        //}
 
         private void Inpage2Unicode()
         {
@@ -610,7 +712,7 @@ namespace InPageToAutographa
                         }
                         else if (ipByte[i + 1] == 165 & ((167 > ipByte[i + 3] & ipByte[i + 3] > 128) | (750 > ipByte[i + 3] & ipByte[i + 3] > 338) | (8485 > ipByte[i + 3] & ipByte[i + 3] > 8210) | ipByte[i + 3] == 170 | ipByte[i + 3] == 182 | ipByte[i + 3] == 184 | ipByte[i + 3] == 185 | ipByte[i + 3] == 200 | ipByte[i + 3] == 201))
                         {
-                            if (chkBYie.Checked == true)
+                            if (CheckboxBYieChecked == true)
                             {
                                 ucOutput += Convert.ToChar(1740).ToString();
                                 //bari-ya ? convert to  ? ?  
@@ -636,59 +738,59 @@ namespace InPageToAutographa
                         else if (((ipByte[i + 1] == 177) & (ipByte[i + 3] == 177)))
                         {
                             //  remove 1 jazam 
-                            ucOutput += Convert.ToChar(cpi2u.Item[Convert.ToInt32(ipByte[i + 1])]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[Convert.ToInt32(ipByte[i + 1])]).ToString();
                             i += 3;
                         }
-                        else if (ipByte[i + 1] == 166 & ucOutput.Last == Convert.ToChar(1574).ToString())
+                        else if (ipByte[i + 1] == 166 & ucOutput[ucOutput.Length -1].ToString() == Convert.ToChar(1574).ToString())
                         {
                             //remove ya-hamza  before hamza
                             ucOutput = ucOutput.Remove(ucOutput.Length - 1, 1);
-                            ucOutput += Convert.ToChar(cpi2u.Item[166]).ToString();
-                            ucOutput += Convert.ToChar(cpi2u.Item[191]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[166]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[191]).ToString();
                             i += 1;
                         }
                         else if (ipByte[i + 1] == 253 | ipByte[i + 1] == 254)
                         {
                             //  Change " 
-                            if (chkChangeCC.Checked == true)
+                            if (CheckboxChangeCCChecked == true)
                             {
                                 if (ipByte[i + 1] == 253)
                                 {
-                                    ucOutput += Convert.ToChar(cpi2u.Item[254]).ToString();
+                                    ucOutput += Convert.ToChar(CharacterMap.cpi2u[254]).ToString();
                                     i += 1;
                                 }
                                 else
                                 {
-                                    ucOutput += Convert.ToChar(cpi2u.Item[253]).ToString();
+                                    ucOutput += Convert.ToChar(CharacterMap.cpi2u[253]).ToString();
                                     i += 1;
                                 }
                             }
                             else
                             {
-                                ucOutput += Convert.ToChar(cpi2u.Item[Convert.ToInt32(ipByte[i + 1]))].ToString();
+                                ucOutput += Convert.ToChar(CharacterMap.cpi2u[Convert.ToInt32(ipByte[i + 1])].ToString());
                                 i += 1;
                             }
                         }
                         else if (ipByte[i + 1] == 224)
                         {
                             // ... double  
-                            ucOutput += Convert.ToChar(cpi2u.Item[224]).ToString();
-                            ucOutput += Convert.ToChar(cpi2u.Item[224]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[224]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[224]).ToString();
                             i += 1;
 
                         }
                         else if (ipByte[i + 1] == 184 & !(ipByte[i + 3] == 32 | ipByte[i + 2] == 13 | ipByte[i + 2] == 9 | (255 > ipByte[i + 3] & ipByte[i + 3] > 202) | (198 > ipByte[i + 3] & ipByte[i + 3] > 167)))
                         {
                             // add space after ?
-                            ucOutput += Convert.ToChar(cpi2u.Item[184]).ToString();
-                            ucOutput += Convert.ToChar(cpi2u.Item[32]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[184]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[32]).ToString();
                             i += 1;
                         }
-                        else if (((ipByte[i + 1] == 162 | ipByte[i + 1] == 182) & ucOutput.Last == Convert.ToChar(1574).ToString()))
+                        else if (((ipByte[i + 1] == 162 | ipByte[i + 1] == 182) & ucOutput[ucOutput.Length - 1].ToString() == Convert.ToChar(1574).ToString()))
                         {
                             //remove ya-hamza befor wao-haza or wao
                             ucOutput = ucOutput.Remove(ucOutput.Length - 1, 1);
-                            ucOutput += Convert.ToChar(cpi2u.Item[182]).ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[182]).ToString();
                             i += 1;
                         }
                         else if ((218 > ipByte[i + 1] & ipByte[i + 1] > 207) & ((218 > ipByte[i + 3] & ipByte[i + 3] > 207) | (ipByte[i + 3] == 223 | ipByte[i + 2] == 47)))
@@ -704,7 +806,7 @@ namespace InPageToAutographa
                                 }
                                 else
                                 {
-                                    temValue += Convert.ToChar(cpi2u.Item[Convert.ToInt32(ipByte[i + 1]))].ToString();
+                                    temValue += Convert.ToChar(CharacterMap.cpi2u[Convert.ToInt32(ipByte[i + 1])].ToString());
                                 }
 
                                 if (ipByte[i + 1] == 47 | ipByte[i] == 47)
@@ -717,7 +819,7 @@ namespace InPageToAutographa
                                 }
 
                             }
-                            if (chkChangeP.Checked == false)
+                            if (CheckboxChangePChecked == false)
                             {
                                 ucOutput += CharacterMap.ChangePositon(temValue);
                             }
@@ -729,7 +831,7 @@ namespace InPageToAutographa
                         }
                         else
                         {
-                            ucOutput += Convert.ToChar(cpi2u.Item[Convert.ToInt32(ipByte[i + 1]))].ToString();
+                            ucOutput += Convert.ToChar(CharacterMap.cpi2u[Convert.ToInt32(ipByte[i + 1])].ToString());
                             i += 1;
                         }
 
@@ -765,7 +867,7 @@ namespace InPageToAutographa
                                 i += 1;
                             }
 
-                            if (chkChangeP.Checked == false)
+                            if (CheckboxChangePChecked == false)
                             {
                                 ucOutput += CharacterMap.ChangePositon(my_tempVar);
                             }
@@ -800,59 +902,59 @@ namespace InPageToAutographa
             ucOutput = Regex.Replace(ucOutput, "[ ]+[ ]", " ");
             Clipboard.SetText(ucOutput);
 
-            if (NotifyIcon1.Visible == true)
-            {
-                NotifyIcon1.ShowBalloonTip(2000, "Pak Inpage to Unicode", "Converted into unicode formate", ToolTipIcon.Info);
-            }
-            else
-            {
-                MessageBox.Show("Converted into unicode formate", MsgBoxStyle.Information);
-            }
+            //if (NotifyIcon1.Visible == true)
+            //{
+            //    NotifyIcon1.ShowBalloonTip(2000, "Pak Inpage to Unicode", "Converted into unicode formate", ToolTipIcon.Info);
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Converted into unicode formate", MsgBoxStyle.Information);
+            //}
             ucOutput = " ";
         }
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
-        {
-            if (m.Msg == hotKey)
-            {
-                IntPtr id = m.WParam;
-                if (id.ToString() == "200")
-                {
-                    try
-                    {
-                        Inpage2Unicode();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-                else if (id.ToString() == "100")
-                {
-                    try
-                    {
-                        Unicode2Inpage();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-                else if (id.ToString() == "300")
-                {
-                    try
-                    {
-                        Unicode2Inpage();
-                        Inpage2Unicode();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-            }
-            base.WndProc(m);
-        }
+        //protected override void WndProc(ref System.Windows.Forms.Message m)
+        //{
+        //    if (m.Msg == hotKey)
+        //    {
+        //        IntPtr id = m.WParam;
+        //        if (id.ToString() == "200")
+        //        {
+        //            try
+        //            {
+        //                Inpage2Unicode();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show(ex.Message);
+        //            }
+        //        }
+        //        else if (id.ToString() == "100")
+        //        {
+        //            try
+        //            {
+        //                // Unicode2Inpage();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show(ex.Message);
+        //            }
+        //        }
+        //        else if (id.ToString() == "300")
+        //        {
+        //            try
+        //            {
+        //                //Unicode2Inpage();
+        //                Inpage2Unicode();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show(ex.Message);
+        //            }
+        //        }
+        //    }
+        //    base.WndProc(m);
+        //}
 
         private void InpageToUnicodeToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
         {
@@ -871,7 +973,7 @@ namespace InPageToAutographa
         {
             try
             {
-                Unicode2Inpage();
+                //Unicode2Inpage();
             }
             catch (Exception ex)
             {
@@ -880,62 +982,62 @@ namespace InPageToAutographa
 
         }
 
-        private void frmInPageConverter_Resize(object sender, System.EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.Hide();
-                NotifyIcon1.Visible = true;
-            }
+        //private void frmInPageConverter_Resize(object sender, System.EventArgs e)
+        //{
+        //    if (this.WindowState == FormWindowState.Minimized)
+        //    {
+        //        this.Hide();
+        //        NotifyIcon1.Visible = true;
+        //    }
 
-        }
+        //}
 
-        private void NotifyIcon1_DoubleClick(System.Object sender, System.EventArgs e)
-        {
-            this.Show();
-            NotifyIcon1.Visible = false;
-        }
+        //private void NotifyIcon1_DoubleClick(System.Object sender, System.EventArgs e)
+        //{
+        //    this.Show();
+        //    NotifyIcon1.Visible = false;
+        //}
 
-        private void ExitToolStripMenuItem1_Click(System.Object sender, System.EventArgs e)
-        {
-            Application.Exit();
-        }
+        //private void ExitToolStripMenuItem1_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    Application.Exit();
+        //}
 
-        private void ShowToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
-        {
-            this.Show();
-            NotifyIcon1.Visible = false;
-        }
+        //private void ShowToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    this.Show();
+        //    NotifyIcon1.Visible = false;
+        //}
 
-        private void btnExit_Click(System.Object sender, System.EventArgs e)
-        {
-            Application.Exit();
-        }
+        //private void btnExit_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    Application.Exit();
+        //}
 
-        private void DisableToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
-        {
-            if (DisableToolStripMenuItem.Text == "Disable")
-            {
-                DisableToolStripMenuItem.Text = "Enable";
-                UnregisterHotKey(this.Handle, 100);
-                UnregisterHotKey(this.Handle, 200);
-                UnregisterHotKey(this.Handle, 300);
-            }
-            else
-            {
-                DisableToolStripMenuItem.Text = "Disable";
-                RegisterHotKey(this.Handle, 100, altKey + ctrlKey, Keys.I);
-                RegisterHotKey(this.Handle, 200, altKey + ctrlKey, Keys.U);
-                RegisterHotKey(this.Handle, 300, altKey + ctrlKey, Keys.A);
-            }
-        }
+        //private void DisableToolStripMenuItem_Click(System.Object sender, System.EventArgs e)
+        //{
+        //    if (DisableToolStripMenuItem.Text == "Disable")
+        //    {
+        //        DisableToolStripMenuItem.Text = "Enable";
+        //        UnregisterHotKey(this.Handle, 100);
+        //        UnregisterHotKey(this.Handle, 200);
+        //        UnregisterHotKey(this.Handle, 300);
+        //    }
+        //    else
+        //    {
+        //        DisableToolStripMenuItem.Text = "Disable";
+        //        RegisterHotKey(this.Handle, 100, altKey + ctrlKey, Keys.I);
+        //        RegisterHotKey(this.Handle, 200, altKey + ctrlKey, Keys.U);
+        //        RegisterHotKey(this.Handle, 300, altKey + ctrlKey, Keys.A);
+        //    }
+        //}
 
         private void btnFConvert_Click(System.Object sender, System.EventArgs e)
         {
             try
             {
                 WriteStatusMessage("Converting ... ");
-                pb.Visible = true;
+                IsProgressBarVisible = true;
                 bgw4_new.RunWorkerAsync();
             }
             catch (Exception ex)
@@ -978,10 +1080,10 @@ namespace InPageToAutographa
             string regHamza = null;
             string regHamzaWAhrab = null;
 
-            // If rbtnUrdu.Checked Then
+            // If rbtnUrduChecked Then
             regHamza = "(?)" + regUrduAlfabat;
             regHamzaWAhrab = "(?)" + regAhrab + regUrduAlfabat;
-            //ElseIf rbtnArabic.Checked Then
+            //ElseIf rbtnArabicChecked Then
             //regHamza = "(?)" & regArabiAlfabat
             //regHamzaWAhrab = "(?)" & regAhrab & regArabiAlfabat
             //End If
@@ -991,8 +1093,8 @@ namespace InPageToAutographa
             br.Close();
             fStream.Close();
 
-            int startP = CharacterMap.findStartPosition(binaryData);
-            int endP = CharacterMap.findEndPosition(binaryData, startP);
+            int startP = CharacterMap.FindStartPosition(binaryData);
+            int endP = CharacterMap.FindEndPosition(binaryData, startP);
             int slength = endP - startP;
 
 
@@ -1000,7 +1102,7 @@ namespace InPageToAutographa
 
             // newOutputBox("start index = " & startP & " end index = " & endP & " length = " & endP - startP)
             // Dim newOutput As String = BitConverter.ToString()(my_binaryData)
-            string newOutput = "-" + BitConverter.ToString()(binaryData, startP, slength);
+            string newOutput = "-" + BitConverter.ToString(binaryData, startP, slength);
             //     newOutput = Replace(newOutput, "-", "")
             //  Dim sample As String = newOutput
 
@@ -1021,109 +1123,109 @@ namespace InPageToAutographa
             //      Exit Sub
             ///''''''''''''''''''''''''''
             newOutput = Regex.Replace(newOutput, regEnter, myEnter);
-            newOutput = Strings.Replace(newOutput, "-09", myTab);
-            newOutput = Strings.Replace(newOutput, "-04-AA", "?");
+            newOutput = newOutput.Replace("-09",myTab);
+            newOutput = newOutput.Replace("-04-AA","?");
             // ZEIR
             ///'''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-            newOutput = Strings.Replace(newOutput, "-04-20", " ");
-            newOutput = Strings.Replace(newOutput, "-04-81-04-B3", "?");
-            newOutput = Strings.Replace(newOutput, "-04-81-04-BF", "?");
-            newOutput = Strings.Replace(newOutput, "-04-81", "?");
-            newOutput = Strings.Replace(newOutput, "-04-82", "?");
-            newOutput = Strings.Replace(newOutput, "-04-83", "?");
-            newOutput = Strings.Replace(newOutput, "-04-84", "?");
-            newOutput = Strings.Replace(newOutput, "-04-85", "?");
-            newOutput = Strings.Replace(newOutput, "-04-86", "?");
-            newOutput = Strings.Replace(newOutput, "-04-87", "?");
-            newOutput = Strings.Replace(newOutput, "-04-88", "?");
-            newOutput = Strings.Replace(newOutput, "-04-89", "?");
-            newOutput = Strings.Replace(newOutput, "-04-8A", "?");
-            newOutput = Strings.Replace(newOutput, "-04-8B", "?");
-            newOutput = Strings.Replace(newOutput, "-04-8C", "?");
-            newOutput = Strings.Replace(newOutput, "-04-8D", "?");
-            newOutput = Strings.Replace(newOutput, "-04-8E", "?");
-            newOutput = Strings.Replace(newOutput, "-04-8F", "?");
-            newOutput = Strings.Replace(newOutput, "-04-90", "?");
-            newOutput = Strings.Replace(newOutput, "-04-91", "?");
-            newOutput = Strings.Replace(newOutput, "-04-92", "?");
-            newOutput = Strings.Replace(newOutput, "-04-93", "?");
-            newOutput = Strings.Replace(newOutput, "-04-94", "?");
-            newOutput = Strings.Replace(newOutput, "-04-95", "?");
-            newOutput = Strings.Replace(newOutput, "-04-96", "?");
-            newOutput = Strings.Replace(newOutput, "-04-97", "?");
-            newOutput = Strings.Replace(newOutput, "-04-98", "?");
-            newOutput = Strings.Replace(newOutput, "-04-99", "?");
-            newOutput = Strings.Replace(newOutput, "-04-9A", "?");
-            newOutput = Strings.Replace(newOutput, "-04-9B", "?");
-            if (rbtnUrdu.Checked)
+            newOutput = newOutput.Replace("-04-20"," ");
+            newOutput = newOutput.Replace("-04-81-04-B3","?");
+            newOutput = newOutput.Replace("-04-81-04-BF","?");
+            newOutput = newOutput.Replace("-04-81","?");
+            newOutput = newOutput.Replace("-04-82","?");
+            newOutput = newOutput.Replace("-04-83","?");
+            newOutput = newOutput.Replace("-04-84","?");
+            newOutput = newOutput.Replace("-04-85","?");
+            newOutput = newOutput.Replace("-04-86","?");
+            newOutput = newOutput.Replace("-04-87","?");
+            newOutput = newOutput.Replace("-04-88","?");
+            newOutput = newOutput.Replace("-04-89","?");
+            newOutput = newOutput.Replace("-04-8A","?");
+            newOutput = newOutput.Replace("-04-8B","?");
+            newOutput = newOutput.Replace("-04-8C","?");
+            newOutput = newOutput.Replace("-04-8D","?");
+            newOutput = newOutput.Replace("-04-8E","?");
+            newOutput = newOutput.Replace("-04-8F","?");
+            newOutput = newOutput.Replace("-04-90","?");
+            newOutput = newOutput.Replace("-04-91","?");
+            newOutput = newOutput.Replace("-04-92","?");
+            newOutput = newOutput.Replace("-04-93","?");
+            newOutput = newOutput.Replace("-04-94","?");
+            newOutput = newOutput.Replace("-04-95","?");
+            newOutput = newOutput.Replace("-04-96","?");
+            newOutput = newOutput.Replace("-04-97","?");
+            newOutput = newOutput.Replace("-04-98","?");
+            newOutput = newOutput.Replace("-04-99","?");
+            newOutput = newOutput.Replace("-04-9A","?");
+            newOutput = newOutput.Replace("-04-9B","?");
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-9C", "?");
+                newOutput = newOutput.Replace("-04-9C","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-9C", "?");
+                newOutput = newOutput.Replace("-04-9C","?");
             }
-            newOutput = Strings.Replace(newOutput, "-04-9D", "?");
-            newOutput = Strings.Replace(newOutput, "-04-9E", "?");
-            newOutput = Strings.Replace(newOutput, "-04-9F", "?");
-            newOutput = Strings.Replace(newOutput, "-04-A0", "?");
-            newOutput = Strings.Replace(newOutput, "-04-A1", "?");
+            newOutput = newOutput.Replace("-04-9D","?");
+            newOutput = newOutput.Replace("-04-9E","?");
+            newOutput = newOutput.Replace("-04-9F","?");
+            newOutput = newOutput.Replace("-04-A0","?");
+            newOutput = newOutput.Replace("-04-A1","?");
             //  newOutput = Replace(newOutput, "-04-A3-04-A2", "?")
-            if (chkHehHamza.Checked)
+            if (CheckboxHehHamzaChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-A3-04-A2", "?");
-                newOutput = Strings.Replace(newOutput, "-04-BF-04-A2", "?");
+                newOutput = newOutput.Replace("-04-A3-04-A2","?");
+                newOutput = newOutput.Replace("-04-BF-04-A2","?");
                 // testing
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-A3-04-A2", "??");
+                newOutput = newOutput.Replace("-04-A3-04-A2","??");
             }
 
-            newOutput = Strings.Replace(newOutput, "-04-A2-04-BF", "?");
+            newOutput = newOutput.Replace("-04-A2-04-BF","?");
             // urdu arabic
-            if (rbtnUrdu.Checked)
+            if (rbtnUrduChecked)
             {
                 // urdu
-                if (chkHehHamza.Checked)
+                if (CheckboxHehHamzaChecked)
                 {
-                    newOutput = Strings.Replace(newOutput, "-04-BF-04-A6", "?");
+                    newOutput = newOutput.Replace("-04-BF-04-A6","?");
                     // testing
-                    newOutput = Strings.Replace(newOutput, "-04-A3-04-A6", "?");
+                    newOutput = newOutput.Replace("-04-A3-04-A6","?");
                     // testing
                 }
-                newOutput = Strings.Replace(newOutput, "-04-A6-04-BF", "?");
+                newOutput = newOutput.Replace("-04-A6-04-BF","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-A6-04-BF", "?");
+                newOutput = newOutput.Replace("-04-A6-04-BF","?");
             }
             //  newOutput = Replace(newOutput, "-04-BF-04-A6", "?")  ' testing
-            newOutput = Strings.Replace(newOutput, "-04-A3-04-A6", "??");
-            newOutput = Strings.Replace(newOutput, "-04-A2", "?");
-            newOutput = Strings.Replace(newOutput, "-04-A3", "?");
+            newOutput = newOutput.Replace("-04-A3-04-A6","??");
+            newOutput = newOutput.Replace("-04-A2","?");
+            newOutput = newOutput.Replace("-04-A3","?");
             //     newOutput = Replace(newOutput, "-44-A3", "?")  ' modified
-            newOutput = Strings.Replace(newOutput, "-04-A4-04-BF", "?");
-            if (rbtnUrdu.Checked)
+            newOutput = newOutput.Replace("-04-A4-04-BF","?");
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-A4", "?");
+                newOutput = newOutput.Replace("-04-A4","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-A4", "?");
+                newOutput = newOutput.Replace("-04-A4","?");
             }
-            newOutput = Strings.Replace(newOutput, "-04-A5", "?");
+            newOutput = newOutput.Replace("-04-A5","?");
             // newOutput = Replace(newOutput, "-04-A6", "?")
-            if (rbtnUrdu.Checked)
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-A6", "?");
-                newOutput = Strings.Replace(newOutput, "-04-A7", "?");
+                newOutput = newOutput.Replace("-04-A6","?");
+                newOutput = newOutput.Replace("-04-A7","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-A6", "?");
-                newOutput = Strings.Replace(newOutput, "-04-A7", "?");
+                newOutput = newOutput.Replace("-04-A6","?");
+                newOutput = newOutput.Replace("-04-A7","?");
             }
 
 
@@ -1133,283 +1235,283 @@ namespace InPageToAutographa
 
             //'/////////////////////////////////////////////
 
-            newOutput = Strings.Replace(newOutput, "-04-A8", "?");
+            newOutput = newOutput.Replace("-04-A8","?");
             // 2 ZEIR NICHE  
             //remove kashida
-            if (chkRKashida.Checked)
+            if (CheckboxRKashidaChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-A9", "");
+                newOutput = newOutput.Replace("-04-A9","");
                 // 169 TATWEEL
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-A9", "?");
+                newOutput = newOutput.Replace("-04-A9","?");
                 // 169 TATWEEL
             }
-            newOutput = Strings.Replace(newOutput, "-04-AA", "?");
+            newOutput = newOutput.Replace("-04-AA","?");
             // ZEIR
-            newOutput = Strings.Replace(newOutput, "-04-AB", "?");
+            newOutput = newOutput.Replace("-04-AB","?");
             // ZABAR
-            newOutput = Strings.Replace(newOutput, "-04-AC", "?");
+            newOutput = newOutput.Replace("-04-AC","?");
             // PAESH
-            newOutput = Strings.Replace(newOutput, "-04-AD", "?");
+            newOutput = newOutput.Replace("-04-AD","?");
             // 0651 UNICODE VALUE
-            newOutput = Strings.Replace(newOutput, "-04-AE", "?");
+            newOutput = newOutput.Replace("-04-AE","?");
             // ALAH ISLAM SH
 
-            newOutput = Strings.Replace(newOutput, "-04-B0", "?");
+            newOutput = newOutput.Replace("-04-B0","?");
             // KHARI ZEIR
-            if (rbtnUrdu.Checked)
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-B1-04-B1", "?");
+                newOutput = newOutput.Replace("-04-B1-04-B1","?");
                 // SAKIN
-                newOutput = Strings.Replace(newOutput, "-04-B1", "?");
+                newOutput = newOutput.Replace("-04-B1","?");
                 // SAKIN
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-B1-04-B1", "?");
+                newOutput = newOutput.Replace("-04-B1-04-B1","?");
                 // SAKIN
-                newOutput = Strings.Replace(newOutput, "-04-B1", "?");
+                newOutput = newOutput.Replace("-04-B1","?");
                 // SAKIN
             }
-            newOutput = Strings.Replace(newOutput, "-04-B3", "?");
+            newOutput = newOutput.Replace("-04-B3","?");
             // MAD
-            newOutput = Strings.Replace(newOutput, "-04-B4", "?");
+            newOutput = newOutput.Replace("-04-B4","?");
             // SAKIN
-            newOutput = Strings.Replace(newOutput, "-04-B5", "?");
+            newOutput = newOutput.Replace("-04-B5","?");
             //  PAESH TYPE PHOOL
-            newOutput = Strings.Replace(newOutput, "-04-B6", "?");
-            newOutput = Strings.Replace(newOutput, "-04-B7", "?");
-            newOutput = Strings.Replace(newOutput, "-04-B8", "?");
-            if (rbtnUrdu.Checked)
+            newOutput = newOutput.Replace("-04-B6","?");
+            newOutput = newOutput.Replace("-04-B7","?");
+            newOutput = newOutput.Replace("-04-B8","?");
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-B9", "?");
+                newOutput = newOutput.Replace("-04-B9","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-B9", "?");
+                newOutput = newOutput.Replace("-04-B9","?");
             }
-            newOutput = Strings.Replace(newOutput, "-04-BD", "?");
+            newOutput = newOutput.Replace("-04-BD","?");
             // KHARI ZABAR
-            newOutput = Strings.Replace(newOutput, "-04-BE", "?");
+            newOutput = newOutput.Replace("-04-BE","?");
             // ULTA PAESH
-            newOutput = Strings.Replace(newOutput, "-04-BF", "?");
+            newOutput = newOutput.Replace("-04-BF","?");
             // HAMZA OOPER
 
-            newOutput = Strings.Replace(newOutput, "-04-C7", "?");
+            newOutput = newOutput.Replace("-04-C7","?");
             // 2 ZABAR OOPAR
-            newOutput = Strings.Replace(newOutput, "-04-C8", "?");
-            newOutput = Strings.Replace(newOutput, "-04-C9", "?");
-            newOutput = Strings.Replace(newOutput, "-04-CA", "?");
-            newOutput = Strings.Replace(newOutput, "-04-CB", "?");
+            newOutput = newOutput.Replace("-04-C8","?");
+            newOutput = newOutput.Replace("-04-C9","?");
+            newOutput = newOutput.Replace("-04-CA","?");
+            newOutput = newOutput.Replace("-04-CB","?");
             // ALLAH
-            newOutput = Strings.Replace(newOutput, "-04-CF", "?");
+            newOutput = newOutput.Replace("-04-CF","?");
             // 207
 
-            if (rbtnUrdu.Checked)
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-D0", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D1", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D2", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D3", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D4", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D5", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D6", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D7", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D8", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D9", "?");
+                newOutput = newOutput.Replace("-04-D0","?");
+                newOutput = newOutput.Replace("-04-D1","?");
+                newOutput = newOutput.Replace("-04-D2","?");
+                newOutput = newOutput.Replace("-04-D3","?");
+                newOutput = newOutput.Replace("-04-D4","?");
+                newOutput = newOutput.Replace("-04-D5","?");
+                newOutput = newOutput.Replace("-04-D6","?");
+                newOutput = newOutput.Replace("-04-D7","?");
+                newOutput = newOutput.Replace("-04-D8","?");
+                newOutput = newOutput.Replace("-04-D9","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-D0", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D1", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D2", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D3", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D4", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D5", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D6", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D7", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D8", "?");
-                newOutput = Strings.Replace(newOutput, "-04-D9", "?");
+                newOutput = newOutput.Replace("-04-D0","?");
+                newOutput = newOutput.Replace("-04-D1","?");
+                newOutput = newOutput.Replace("-04-D2","?");
+                newOutput = newOutput.Replace("-04-D3","?");
+                newOutput = newOutput.Replace("-04-D4","?");
+                newOutput = newOutput.Replace("-04-D5","?");
+                newOutput = newOutput.Replace("-04-D6","?");
+                newOutput = newOutput.Replace("-04-D7","?");
+                newOutput = newOutput.Replace("-04-D8","?");
+                newOutput = newOutput.Replace("-04-D9","?");
             }
-            newOutput = Strings.Replace(newOutput, "-04-DA", "!");
+            newOutput = newOutput.Replace("-04-DA","!");
             //218
-            newOutput = Strings.Replace(newOutput, "-04-DB", "?");
+            newOutput = newOutput.Replace("-04-DB","?");
             // SP B
-            newOutput = Strings.Replace(newOutput, "-04-DC", "?");
-            newOutput = Strings.Replace(newOutput, "-04-DE", "%");
-            newOutput = Strings.Replace(newOutput, "-04-DF", "/");
+            newOutput = newOutput.Replace("-04-DC","?");
+            newOutput = newOutput.Replace("-04-DE","%");
+            newOutput = newOutput.Replace("-04-DF","/");
 
-            newOutput = Strings.Replace(newOutput, "-04-E0", "……");
+            newOutput = newOutput.Replace("-04-E0","……");
             // ... DBL
-            newOutput = Strings.Replace(newOutput, "-04-E1", ")");
+            newOutput = newOutput.Replace("-04-E1",")");
             //N B
-            newOutput = Strings.Replace(newOutput, "-04-E2", "(");
+            newOutput = newOutput.Replace("-04-E2","(");
             //N B 
-            newOutput = Strings.Replace(newOutput, "-04-E4", "+");
-            newOutput = Strings.Replace(newOutput, "-04-E6", "?");
+            newOutput = newOutput.Replace("-04-E4","+");
+            newOutput = newOutput.Replace("-04-E6","?");
             // RAZI ALLAH SH
-            newOutput = Strings.Replace(newOutput, "-04-E7", "?");
+            newOutput = newOutput.Replace("-04-E7","?");
             // RAHMATU ALLAH SH
-            newOutput = Strings.Replace(newOutput, "-04-E8", "?");
-            newOutput = Strings.Replace(newOutput, "-04-E9", ":");
+            newOutput = newOutput.Replace("-04-E8","?");
+            newOutput = newOutput.Replace("-04-E9",":");
             //233
-            newOutput = Strings.Replace(newOutput, "-04-EA", "?");
-            newOutput = Strings.Replace(newOutput, "-04-EB", "×");
-            newOutput = Strings.Replace(newOutput, "-04-EC", "=");
-            newOutput = Strings.Replace(newOutput, "-04-ED", "?");
-            newOutput = Strings.Replace(newOutput, "-04-EE", "?");
-            newOutput = Strings.Replace(newOutput, "-04-EF", "÷");
+            newOutput = newOutput.Replace("-04-EA","?");
+            newOutput = newOutput.Replace("-04-EB","×");
+            newOutput = newOutput.Replace("-04-EC","=");
+            newOutput = newOutput.Replace("-04-ED","?");
+            newOutput = newOutput.Replace("-04-EE","?");
+            newOutput = newOutput.Replace("-04-EF","÷");
 
-            newOutput = Strings.Replace(newOutput, "-04-F1", "?");
+            newOutput = newOutput.Replace("-04-F1","?");
             //241
-            newOutput = Strings.Replace(newOutput, "-04-F2", "?");
-            if (rbtnUrdu.Checked)
+            newOutput = newOutput.Replace("-04-F2","?");
+            if (rbtnUrduChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-F3", "?");
+                newOutput = newOutput.Replace("-04-F3","?");
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-F3", ".");
+                newOutput = newOutput.Replace("-04-F3",".");
             }
-            newOutput = Strings.Replace(newOutput, "-04-F5", "-");
+            newOutput = newOutput.Replace("-04-F5","-");
             //245  /
-            newOutput = Strings.Replace(newOutput, "-04-F6", "?");
+            newOutput = newOutput.Replace("-04-F6","?");
             // PBUH
-            newOutput = Strings.Replace(newOutput, "-04-F7", "?");
+            newOutput = newOutput.Replace("-04-F7","?");
             // 247
-            newOutput = Strings.Replace(newOutput, "-04-F8", "?");
+            newOutput = newOutput.Replace("-04-F8","?");
             // PBUH SHORT
-            newOutput = Strings.Replace(newOutput, "-04-F9", ",");
-            newOutput = Strings.Replace(newOutput, "-04-FA", "]");
-            newOutput = Strings.Replace(newOutput, "-04-FB", "[");
-            newOutput = Strings.Replace(newOutput, "-04-FC", ".");
+            newOutput = newOutput.Replace("-04-F9",",");
+            newOutput = newOutput.Replace("-04-FA","]");
+            newOutput = newOutput.Replace("-04-FB","[");
+            newOutput = newOutput.Replace("-04-FC",".");
             //.
 
             bgw4_new.ReportProgress(20);
-            if (chkQuotMarks.Checked)
+            if (CheckboxQuotMarksChecked)
             {
-                newOutput = Strings.Replace(newOutput, "-04-FE", "’");
+                newOutput = newOutput.Replace("-04-FE","’");
                 //254
-                newOutput = Strings.Replace(newOutput, "-04-FD", "‘");
+                newOutput = newOutput.Replace("-04-FD","‘");
                 //253
             }
             else
             {
-                newOutput = Strings.Replace(newOutput, "-04-FD", "’");
+                newOutput = newOutput.Replace("-04-FD","’");
                 //253
-                newOutput = Strings.Replace(newOutput, "-04-FE", "‘");
+                newOutput = newOutput.Replace("-04-FE","‘");
                 //254
             }
-            newOutput = Strings.Replace(newOutput, "-04-3A", "");
-            newOutput = Strings.Replace(newOutput, "-04-3B", "");
-            newOutput = Strings.Replace(newOutput, "-09", myTab);
+            newOutput = newOutput.Replace("-04-3A","");
+            newOutput = newOutput.Replace("-04-3B","");
+            newOutput = newOutput.Replace("-09",myTab);
 
-            newOutput = Strings.Replace(newOutput, "-20", " ");
-            newOutput = Strings.Replace(newOutput, "-21", "!");
-            newOutput = Strings.Replace(newOutput, "-22", Convert.ToChar(34));
-            newOutput = Strings.Replace(newOutput, "-23", "#");
-            newOutput = Strings.Replace(newOutput, "-24", "$");
-            newOutput = Strings.Replace(newOutput, "-25", "%");
-            newOutput = Strings.Replace(newOutput, "-26", "&");
-            newOutput = Strings.Replace(newOutput, "-27", "'");
-            newOutput = Strings.Replace(newOutput, "-28", "(");
-            newOutput = Strings.Replace(newOutput, "-29", ")");
-            newOutput = Strings.Replace(newOutput, "-2A", "*");
-            newOutput = Strings.Replace(newOutput, "-2B", "+");
-            newOutput = Strings.Replace(newOutput, "-2C", ",");
-            newOutput = Strings.Replace(newOutput, "-2D", "-");
-            newOutput = Strings.Replace(newOutput, "-2E", ".");
-            newOutput = Strings.Replace(newOutput, "-2F", "/");
+            newOutput = newOutput.Replace("-20"," ");
+            newOutput = newOutput.Replace("-21","!");
+            newOutput = newOutput.Replace("-22",Convert.ToChar(34).ToString());
+            newOutput = newOutput.Replace("-23","#");
+            newOutput = newOutput.Replace("-24","$");
+            newOutput = newOutput.Replace("-25","%");
+            newOutput = newOutput.Replace("-26","&");
+            newOutput = newOutput.Replace("-27","'");
+            newOutput = newOutput.Replace("-28","(");
+            newOutput = newOutput.Replace("-29",")");
+            newOutput = newOutput.Replace("-2A","*");
+            newOutput = newOutput.Replace("-2B","+");
+            newOutput = newOutput.Replace("-2C",",");
+            newOutput = newOutput.Replace("-2D","-");
+            newOutput = newOutput.Replace("-2E",".");
+            newOutput = newOutput.Replace("-2F","/");
 
-            newOutput = Strings.Replace(newOutput, "-3A", ":");
-            newOutput = Strings.Replace(newOutput, "-3B", ";");
-            newOutput = Strings.Replace(newOutput, "-3C", "<");
-            newOutput = Strings.Replace(newOutput, "-3D", "=");
-            newOutput = Strings.Replace(newOutput, "-3E", ">");
-            newOutput = Strings.Replace(newOutput, "-3F", "?");
+            newOutput = newOutput.Replace("-3A",":");
+            newOutput = newOutput.Replace("-3B",";");
+            newOutput = newOutput.Replace("-3C","<");
+            newOutput = newOutput.Replace("-3D","=");
+            newOutput = newOutput.Replace("-3E",">");
+            newOutput = newOutput.Replace("-3F","?");
 
-            newOutput = Strings.Replace(newOutput, "-40", "@");
-            newOutput = Strings.Replace(newOutput, "-41", "A");
-            newOutput = Strings.Replace(newOutput, "-42", "B");
-            newOutput = Strings.Replace(newOutput, "-43", "C");
-            newOutput = Strings.Replace(newOutput, "-44", "D");
-            newOutput = Strings.Replace(newOutput, "-45", "E");
-            newOutput = Strings.Replace(newOutput, "-46", "F");
-            newOutput = Strings.Replace(newOutput, "-47", "G");
-            newOutput = Strings.Replace(newOutput, "-48", "H");
-            newOutput = Strings.Replace(newOutput, "-49", "I");
-            newOutput = Strings.Replace(newOutput, "-4A", "J");
-            newOutput = Strings.Replace(newOutput, "-4B", "K");
-            newOutput = Strings.Replace(newOutput, "-4C", "L");
-            newOutput = Strings.Replace(newOutput, "-4D", "M");
-            newOutput = Strings.Replace(newOutput, "-4E", "N");
-            newOutput = Strings.Replace(newOutput, "-4F", "O");
+            newOutput = newOutput.Replace("-40","@");
+            newOutput = newOutput.Replace("-41","A");
+            newOutput = newOutput.Replace("-42","B");
+            newOutput = newOutput.Replace("-43","C");
+            newOutput = newOutput.Replace("-44","D");
+            newOutput = newOutput.Replace("-45","E");
+            newOutput = newOutput.Replace("-46","F");
+            newOutput = newOutput.Replace("-47","G");
+            newOutput = newOutput.Replace("-48","H");
+            newOutput = newOutput.Replace("-49","I");
+            newOutput = newOutput.Replace("-4A","J");
+            newOutput = newOutput.Replace("-4B","K");
+            newOutput = newOutput.Replace("-4C","L");
+            newOutput = newOutput.Replace("-4D","M");
+            newOutput = newOutput.Replace("-4E","N");
+            newOutput = newOutput.Replace("-4F","O");
 
-            newOutput = Strings.Replace(newOutput, "-50", "P");
-            newOutput = Strings.Replace(newOutput, "-51", "Q");
-            newOutput = Strings.Replace(newOutput, "-52", "R");
-            newOutput = Strings.Replace(newOutput, "-53", "S");
-            newOutput = Strings.Replace(newOutput, "-54", "T");
-            newOutput = Strings.Replace(newOutput, "-55", "U");
-            newOutput = Strings.Replace(newOutput, "-56", "V");
-            newOutput = Strings.Replace(newOutput, "-57", "W");
-            newOutput = Strings.Replace(newOutput, "-58", "X");
-            newOutput = Strings.Replace(newOutput, "-59", "Y");
-            newOutput = Strings.Replace(newOutput, "-5A", "Z");
-            newOutput = Strings.Replace(newOutput, "-5B", "[");
-            newOutput = Strings.Replace(newOutput, "-5C", "\\");
-            newOutput = Strings.Replace(newOutput, "-5D", "]");
-            newOutput = Strings.Replace(newOutput, "-5E", "^");
-            newOutput = Strings.Replace(newOutput, "-5F", "_");
+            newOutput = newOutput.Replace("-50","P");
+            newOutput = newOutput.Replace("-51","Q");
+            newOutput = newOutput.Replace("-52","R");
+            newOutput = newOutput.Replace("-53","S");
+            newOutput = newOutput.Replace("-54","T");
+            newOutput = newOutput.Replace("-55","U");
+            newOutput = newOutput.Replace("-56","V");
+            newOutput = newOutput.Replace("-57","W");
+            newOutput = newOutput.Replace("-58","X");
+            newOutput = newOutput.Replace("-59","Y");
+            newOutput = newOutput.Replace("-5A","Z");
+            newOutput = newOutput.Replace("-5B","[");
+            newOutput = newOutput.Replace("-5C","\\");
+            newOutput = newOutput.Replace("-5D","]");
+            newOutput = newOutput.Replace("-5E","^");
+            newOutput = newOutput.Replace("-5F","_");
 
-            newOutput = Strings.Replace(newOutput, "-60", "`");
-            newOutput = Strings.Replace(newOutput, "-61", "a");
-            newOutput = Strings.Replace(newOutput, "-62", "b");
-            newOutput = Strings.Replace(newOutput, "-63", "c");
-            newOutput = Strings.Replace(newOutput, "-64", "d");
-            newOutput = Strings.Replace(newOutput, "-65", "e");
-            newOutput = Strings.Replace(newOutput, "-66", "f");
-            newOutput = Strings.Replace(newOutput, "-67", "g");
-            newOutput = Strings.Replace(newOutput, "-68", "h");
-            newOutput = Strings.Replace(newOutput, "-69", "i");
-            newOutput = Strings.Replace(newOutput, "-6A", "j");
-            newOutput = Strings.Replace(newOutput, "-6B", "k");
-            newOutput = Strings.Replace(newOutput, "-6C", "l");
-            newOutput = Strings.Replace(newOutput, "-6D", "m");
-            newOutput = Strings.Replace(newOutput, "-6E", "n");
-            newOutput = Strings.Replace(newOutput, "-6F", "o");
+            newOutput = newOutput.Replace("-60","`");
+            newOutput = newOutput.Replace("-61","a");
+            newOutput = newOutput.Replace("-62","b");
+            newOutput = newOutput.Replace("-63","c");
+            newOutput = newOutput.Replace("-64","d");
+            newOutput = newOutput.Replace("-65","e");
+            newOutput = newOutput.Replace("-66","f");
+            newOutput = newOutput.Replace("-67","g");
+            newOutput = newOutput.Replace("-68","h");
+            newOutput = newOutput.Replace("-69","i");
+            newOutput = newOutput.Replace("-6A","j");
+            newOutput = newOutput.Replace("-6B","k");
+            newOutput = newOutput.Replace("-6C","l");
+            newOutput = newOutput.Replace("-6D","m");
+            newOutput = newOutput.Replace("-6E","n");
+            newOutput = newOutput.Replace("-6F","o");
 
-            newOutput = Strings.Replace(newOutput, "-70", "p");
-            newOutput = Strings.Replace(newOutput, "-71", "q");
-            newOutput = Strings.Replace(newOutput, "-72", "r");
-            newOutput = Strings.Replace(newOutput, "-73", "s");
-            newOutput = Strings.Replace(newOutput, "-74", "t");
-            newOutput = Strings.Replace(newOutput, "-75", "u");
-            newOutput = Strings.Replace(newOutput, "-76", "v");
-            newOutput = Strings.Replace(newOutput, "-77", "w");
-            newOutput = Strings.Replace(newOutput, "-78", "x");
-            newOutput = Strings.Replace(newOutput, "-79", "y");
-            newOutput = Strings.Replace(newOutput, "-7A", "z");
-            newOutput = Strings.Replace(newOutput, "-7B", "{");
-            newOutput = Strings.Replace(newOutput, "-7C", "|");
-            newOutput = Strings.Replace(newOutput, "-7D", "}");
-            newOutput = Strings.Replace(newOutput, "-7E", "~");
-            newOutput = Strings.Replace(newOutput, "-7F", "");
+            newOutput = newOutput.Replace("-70","p");
+            newOutput = newOutput.Replace("-71","q");
+            newOutput = newOutput.Replace("-72","r");
+            newOutput = newOutput.Replace("-73","s");
+            newOutput = newOutput.Replace("-74","t");
+            newOutput = newOutput.Replace("-75","u");
+            newOutput = newOutput.Replace("-76","v");
+            newOutput = newOutput.Replace("-77","w");
+            newOutput = newOutput.Replace("-78","x");
+            newOutput = newOutput.Replace("-79","y");
+            newOutput = newOutput.Replace("-7A","z");
+            newOutput = newOutput.Replace("-7B","{");
+            newOutput = newOutput.Replace("-7C","|");
+            newOutput = newOutput.Replace("-7D","}");
+            newOutput = newOutput.Replace("-7E","~");
+            newOutput = newOutput.Replace("-7F","");
 
-            newOutput = Strings.Replace(newOutput, "-30", "0");
-            newOutput = Strings.Replace(newOutput, "-31", "1");
-            newOutput = Strings.Replace(newOutput, "-32", "2");
+            newOutput = newOutput.Replace("-30","0");
+            newOutput = newOutput.Replace("-31","1");
+            newOutput = newOutput.Replace("-32","2");
             // newOutput = Replace(newOutput, "-33", "3")
-            newOutput = Strings.Replace(newOutput, "-34", "4");
-            newOutput = Strings.Replace(newOutput, "-35", "5");
-            newOutput = Strings.Replace(newOutput, "-36", "6");
-            newOutput = Strings.Replace(newOutput, "-37", "7");
-            newOutput = Strings.Replace(newOutput, "-38", "8");
-            newOutput = Strings.Replace(newOutput, "-39", "9");
+            newOutput = newOutput.Replace("-34","4");
+            newOutput = newOutput.Replace("-35","5");
+            newOutput = newOutput.Replace("-36","6");
+            newOutput = newOutput.Replace("-37","7");
+            newOutput = newOutput.Replace("-38","8");
+            newOutput = newOutput.Replace("-39","9");
 
-            newOutput = Strings.Replace(newOutput, "-33", "3");
+            newOutput = newOutput.Replace("-33","3");
             // @ last
 
             bgw4_new.ReportProgress(30);
@@ -1419,19 +1521,19 @@ namespace InPageToAutographa
             // ElseIf my_binaryData[i + 1] = 166 And my_OutPut.Last = Convert.ToChar(1574).ToString() Then
             //'remove ya-hamza  before hamza
             //my_OutPut = my_OutPut.Remove(my_OutPut.Length - 1, 1)
-            //my_OutPut += Convert.ToChar(ip2uc.Item[166]).ToString()
-            //my_OutPut += Convert.ToChar(ip2uc.Item[191]).ToString()
+            //my_OutPut += Convert.ToChar(CharacterMap.ip2uc[166]).ToString()
+            //my_OutPut += Convert.ToChar(CharacterMap.ip2uc[191]).ToString()
             //i += 1
 
 
             // Dim searchIndex As Integer = 1
 
 
-            if (chkRDigits.Checked & chkReverseSSign.Checked & chkThousSeparator.Checked)
+            if (CheckboxRDigitsChecked & CheckboxReverseSSignChecked & CheckboxThousSeparatorChecked)
             {
                 MatchCollection digitMatches = default(MatchCollection);
 
-                if (rbtnUrdu.Checked)
+                if (rbtnUrduChecked)
                 {
                     digitMatches = Regex.Matches(newOutput, regUDigits);
                 }
@@ -1442,28 +1544,28 @@ namespace InPageToAutographa
 
                 foreach (Match mach in digitMatches)
                 {
-                    if (mach.Value.Last == "/")
+                    if (mach.Value[mach.Value.Length-1].ToString() == "/")
                     {
                         string machValue = mach.Value;
                         machValue = machValue.Remove(machValue.Length - 1, 1);
-                        machValue = Strings.StrReverse(machValue) + "/";
+                        machValue = machValue.Reverse() + "/";
                         newOutput = newOutput.Remove(mach.Index, mach.Length);
                         newOutput = newOutput.Insert(mach.Index, machValue);
                     }
                     else
                     {
                         newOutput = newOutput.Remove(mach.Index, mach.Length);
-                        newOutput = newOutput.Insert(mach.Index, Strings.StrReverse(mach.Value));
+                        newOutput = newOutput.Insert(mach.Index, mach.Value.Reverse().ToString());
                     }
                 }
             }
             else
             {
-                if (chkRDigits.Checked & !chkThousSeparator.Checked)
+                if (CheckboxRDigitsChecked & !CheckboxThousSeparatorChecked)
                 {
                     MatchCollection digitMatches = default(MatchCollection);
 
-                    if (rbtnUrdu.Checked)
+                    if (rbtnUrduChecked)
                     {
                         digitMatches = Regex.Matches(newOutput, regOnlyUDigits);
                     }
@@ -1475,7 +1577,7 @@ namespace InPageToAutographa
                     foreach (Match mach in digitMatches)
                     {
                         newOutput = newOutput.Remove(mach.Index, mach.Length);
-                        newOutput = newOutput.Insert(mach.Index, Strings.StrReverse(mach.Value));
+                        newOutput = newOutput.Insert(mach.Index, mach.Value.Reverse().ToString());
                     }
                 }
             }
@@ -1490,13 +1592,13 @@ namespace InPageToAutographa
             newOutput = Regex.Replace(newOutput, regHamzaWAhrab, "?$2$3");
             bgw4_new.ReportProgress(72);
 
-            if (chkBariYee.Checked)
+            if (CheckboxBariYeeChecked)
             {
                 newOutput = Regex.Replace(newOutput, "(?)" + regUrduAlfabat, "?$2");
             }
 
             bgw4_new.ReportProgress(80);
-            if (rbtnUrdu.Checked)
+            if (rbtnUrduChecked)
             {
                 newOutput = Regex.Replace(newOutput, "(?)" + regUrduAlfabat, "$1 $2");
             }
@@ -1505,16 +1607,16 @@ namespace InPageToAutographa
             //'////////////////////////////////////
             // optional setting
             // remove Double Space
-            if (chkRDoubleSpace.Checked)
+            if (CheckboxRDoubleSpaceChecked)
             {
                 newOutput = Regex.Replace(newOutput, "[ ]+[ ]", " ");
             }
 
-            if (chkRErabs.Checked)
+            if (CheckboxRErabsChecked)
             {
                 newOutput = Regex.Replace(newOutput, regRemoveAhrab, "");
             }
-            if (chkYearSign.Checked)
+            if (CheckboxYearSignChecked)
             {
                 newOutput = Regex.Replace(newOutput, "(?)(?)", "$2$1");
                 newOutput = Regex.Replace(newOutput, "(?)(?)", "$2$1");
@@ -1551,55 +1653,55 @@ namespace InPageToAutographa
 
         private void bgw4_new_ProgressChanged(System.Object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            pb.Value = e.ProgressPercentage;
+            ProgressBarValue = e.ProgressPercentage;
         }
 
         private void bgw4_new_RunWorkerCompleted(System.Object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             WriteStatusMessage("File is successfully converted");
-            pb.Value = 0;
-            pb.Visible = false;
-            btnOpenFile.Enabled = true;
-            btnInPageFile.Enabled = true;
+            ProgressBarValue = 0;
+            IsProgressBarVisible = false;
+            //ButtonOpenFileEnabled = true;
+            //ButtonInPageFileEnabled = true;
         }
 
         private void chkReverseSSign_CheckedChanged(System.Object sender, System.EventArgs e)
         {
-            if (chkReverseSSign.Checked)
+            if (CheckboxReverseSSignChecked)
             {
-                chkThousSeparator.Checked = true;
+                CheckboxThousSeparatorChecked = true;
             }
             else
             {
-                chkThousSeparator.Checked = false;
+                CheckboxThousSeparatorChecked = false;
             }
         }
 
         private void chkThousSeparator_CheckedChanged(System.Object sender, System.EventArgs e)
         {
-            if (chkThousSeparator.Checked)
+            if (CheckboxThousSeparatorChecked)
             {
-                chkReverseSSign.Checked = true;
+                CheckboxReverseSSignChecked = true;
             }
             else
             {
-                chkReverseSSign.Checked = false;
+                CheckboxReverseSSignChecked = false;
             }
         }
 
-        public frmInPageConverter()
-        {
-            Resize += frmInPageConverter_Resize;
-            Load += frmInPageConverter_Load;
-            FormClosing += frmInPageConverter_FormClosing;
-        }
+        //public frmInPageConverter()
+        //{
+        //    Resize += frmInPageConverter_Resize;
+        //    Load += frmInPageConverter_Load;
+        //    FormClosing += frmInPageConverter_FormClosing;
+        //}
 
-        
+
 
     }
 }
 
-*/
+
 /*
          * private void Unicode2Inpage()
                {
@@ -1678,17 +1780,17 @@ namespace InPageToAutographa
                            }
                            else if (ucByte(j) == 8217 | ucByte(j) == 8216)
                            {
-                               if (chkChangeCC.Checked == false)
+                               if (CheckboxChangeCCChecked == false)
                                {
                                    ipOutput += Convert.ToChar(4);
                                    ipOutput += Convert.ToChar(cpu2i.Item[Convert.ToInt32(ucByte(j)))].ToString();
                                }
-                               else if (ucByte(j) == 8217 & chkChangeCC.Checked == true)
+                               else if (ucByte(j) == 8217 & CheckboxChangeCCChecked == true)
                                {
                                    ipOutput += Convert.ToChar(4);
                                    ipOutput += Convert.ToChar(cpu2i.Item[8216]).ToString();
                                }
-                               else if (ucByte(j) == 8216 & chkChangeCC.Checked == true)
+                               else if (ucByte(j) == 8216 & CheckboxChangeCCChecked == true)
                                {
                                    ipOutput += Convert.ToChar(4);
                                    ipOutput += Convert.ToChar(cpu2i.Item[8217]).ToString();
@@ -1703,7 +1805,7 @@ namespace InPageToAutographa
                            }
                            else if (ucByte(j) == 1746 & !(ucByte(j + 1) == 32 | ucByte(j + 1) == 13 | ucByte(j + 1) == 9))
                            {
-                               if (chkBYie.Checked)
+                               if (CheckboxBYieChecked)
                                {
                                    ipOutput += Convert.ToChar(4);
                                    ipOutput += Convert.ToChar(cpu2i.Item[1746]).ToString();
@@ -1776,7 +1878,7 @@ namespace InPageToAutographa
                                    catch (Exception ex)
                                    {
                                    }
-                                   if (chkChangeP.Checked == true)
+                                   if (CheckboxChangePChecked == true)
                                    {
                                        ipOutput += CharacterMap.ChangePositon(temValue);
                                    }

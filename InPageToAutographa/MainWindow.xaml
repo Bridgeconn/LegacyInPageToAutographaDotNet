@@ -5,7 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
-        Title="Inpage to Autographa" Height="500" Width="525" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Inpage to Autographa" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <local:ConverterViewModel/>
+    </Window.DataContext>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -21,25 +25,42 @@
                 <Grid Background="White">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height=".75*"></RowDefinition>
+                        <RowDefinition Height=".5*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="106,41,105,41">
-                        <CheckBox Margin="10">Test 1</CheckBox>
-                        <CheckBox Margin="10">Test 2</CheckBox>
-                        <CheckBox Margin="10">Test 3</CheckBox>
-                        <CheckBox Margin="10">Test 4</CheckBox>
-                        <CheckBox Margin="10">Test 5</CheckBox>
-                        <CheckBox Margin="10">Test 6</CheckBox>
+                    <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <GroupBox Header="Correct" HorizontalAlignment="Center">
+                            <WrapPanel>
+                        <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxYearSignChecked, Mode=TwoWay}">Year Sign</CheckBox>
+                        <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxHehHamzaChecked, Mode=TwoWay}">Heh with Hamza</CheckBox>
+                        <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxWawHamzaChecked, Mode=TwoWay}">Waw with Hamza</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxBariYeeChecked, Mode=TwoWay}">Bari Ya</CheckBox>
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox Header="Remove" HorizontalAlignment="Center">
+                            <WrapPanel>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRDoubleSpaceChecked, Mode=TwoWay}">Double Space</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRKashidaChecked, Mode=TwoWay}">Kashida Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRErabsChecked, Mode=TwoWay}">All Erabs</CheckBox>
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox Header="Reverse" HorizontalAlignment="Center">
+                            <WrapPanel>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRDigitsChecked, Mode=TwoWay}">Numbers / Digits</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseSSignChecked, Mode=TwoWay}">Solidus (/) Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxThousSeparatorChecked, Mode=TwoWay}">Thousands Seperator</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxQuotMarksChecked, Mode=TwoWay}">Quotation Marks</CheckBox>
+                            </WrapPanel>
+                        </GroupBox>
                     </WrapPanel>
                     <ListBox  Grid.Column="0" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="10,0,10,0" />
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
                         <Button Margin="10" Padding="2,3,4,5" Content="Select InPage Files" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center" />
-                        <Button Margin="10" Padding="2,3,4,5"  Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
+                        <Button Margin="10" Padding="2,3,4,5" Command="{Binding ConvertTextCommand}" Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
                     </StackPanel>
                 </Grid>
 
