@@ -16,7 +16,6 @@ namespace InPageToAutographa
 {
     public class ConverterViewModel : ObservableObject
     {
-
         string sourceFName;
         string targetFName;
         string targetFName_Sp;
@@ -78,20 +77,19 @@ namespace InPageToAutographa
             }
         }
         private bool checkboxYieChecked;
-        private bool checkboxKashidaChecked;
+        private bool checkboxRemoveKashidaChecked;
         private bool checkboxChangePChecked;
         private bool checkboxChangeCCChecked;
-        private bool checkboxReverseSSignChecked;
-        private bool checkboxThousSeparatorChecked;
-        private bool checkboxQuotMarksChecked;
-        private bool checkboxWawHamzaChecked;
-        private bool checkboxHehHamzaChecked;
-        private bool checkboxRDigitsChecked;
-        private bool checkboxYearSignChecked;
-        private bool checkboxRErabsChecked;
-        private bool checkboxRKashidaChecked;
-        private bool checkboxRDoubleSpaceChecked;
-        private bool checkboxBariYeeChecked;
+        private bool checkboxReverseSolidusSignChecked;
+        private bool checkboxReverseThousSeparatorChecked;
+        private bool checkboxReverseQuotMarksChecked;
+        private bool checkboxCorrectWawHamzaChecked;
+        private bool checkboxCorrectHehHamzaChecked;
+        private bool checkboxReverseNumbersDigitsChecked;
+        private bool checkboxCorrectYearSignChecked;
+        private bool checkboxRemoveErabsChecked;
+        private bool checkboxRemoveDoubleSpaceChecked;
+        private bool checkboxCorrectBariYeeChecked;
         private bool CheckboxBYieChecked
         {
             get
@@ -106,20 +104,23 @@ namespace InPageToAutographa
             }
         }
 
-        public bool CheckboxKashidaChecked { get { return checkboxKashidaChecked; } set { checkboxKashidaChecked = value; RaisePropertyChangedEvent("CheckboxKashidaChecked"); } }
+        public bool CheckboxCorrectYearSignChecked { get { return checkboxCorrectYearSignChecked; } set { checkboxCorrectYearSignChecked = value; RaisePropertyChangedEvent("CheckboxCorrectYearSignChecked"); } }
+        public bool CheckboxCorrectHehHamzaChecked { get { return checkboxCorrectHehHamzaChecked; } set { checkboxCorrectHehHamzaChecked = value; RaisePropertyChangedEvent("CheckboxCorrectHehHamzaChecked"); } }
+        public bool CheckboxCorrectWawHamzaChecked { get { return checkboxCorrectWawHamzaChecked; } set { checkboxCorrectWawHamzaChecked = value; RaisePropertyChangedEvent("CheckboxCorrectWawHamzaChecked"); } }
+        public bool CheckboxCorrectBariYeeChecked { get { return checkboxCorrectBariYeeChecked; } set { checkboxCorrectBariYeeChecked = value; RaisePropertyChangedEvent("CheckboxCorrectBariYeeChecked"); } }
+
+        public bool CheckboxRemoveDoubleSpaceChecked { get { return checkboxRemoveDoubleSpaceChecked; } set { checkboxRemoveDoubleSpaceChecked = value; RaisePropertyChangedEvent("CheckboxRemoveDoubleSpaceChecked"); } }
+        public bool CheckboxRemoveKashidaChecked { get { return checkboxRemoveKashidaChecked; } set { checkboxRemoveKashidaChecked = value; RaisePropertyChangedEvent("CheckboxRemoveKashidaChecked"); } }
+        public bool CheckboxRemoveErabsChecked { get { return checkboxRemoveErabsChecked; } set { checkboxRemoveErabsChecked = value; RaisePropertyChangedEvent("CheckboxRemoveErabsChecked"); } }
+
+        public bool CheckboxReverseNumbersDigitsChecked { get { return checkboxReverseNumbersDigitsChecked; } set { checkboxReverseNumbersDigitsChecked = value; RaisePropertyChangedEvent("CheckboxReverseNumbersDigitsChecked"); } }
+        public bool CheckboxReverseSolidusSignChecked { get { return checkboxReverseSolidusSignChecked; } set { checkboxReverseSolidusSignChecked = value; RaisePropertyChangedEvent("CheckboxReverseSolidusSignChecked"); } }
+        public bool CheckboxReverseThousSeparatorChecked { get { return checkboxReverseThousSeparatorChecked; } set { checkboxReverseThousSeparatorChecked = value; RaisePropertyChangedEvent("CheckboxReverseThousSeparatorChecked"); } }
+        public bool CheckboxReverseQuotMarksChecked { get { return checkboxReverseQuotMarksChecked; } set { checkboxReverseQuotMarksChecked = value; RaisePropertyChangedEvent("CheckboxReverseQuotMarksChecked"); } }
+        
         public bool CheckboxChangePChecked { get { return checkboxChangePChecked; } set { checkboxChangePChecked = value; RaisePropertyChangedEvent("CheckboxChangePChecked"); } }
         public bool CheckboxChangeCCChecked { get { return checkboxChangeCCChecked; } set { checkboxChangeCCChecked = value; RaisePropertyChangedEvent("CheckboxChangeCCChecked"); } }
-        public bool CheckboxReverseSSignChecked { get { return checkboxReverseSSignChecked; } set { checkboxReverseSSignChecked = value; RaisePropertyChangedEvent("CheckboxReverseSSignChecked"); } }
-        public bool CheckboxThousSeparatorChecked { get { return checkboxThousSeparatorChecked; } set { checkboxThousSeparatorChecked = value; RaisePropertyChangedEvent("CheckboxThousSeparatorChecked"); } }
-        public bool CheckboxQuotMarksChecked { get { return checkboxQuotMarksChecked; } set { checkboxQuotMarksChecked = value; RaisePropertyChangedEvent("CheckboxQuotMarksChecked"); } }
-        public bool CheckboxWawHamzaChecked { get { return checkboxWawHamzaChecked; } set { checkboxWawHamzaChecked = value; RaisePropertyChangedEvent("CheckboxWawHamzaChecked"); } }
-        public bool CheckboxHehHamzaChecked { get { return checkboxHehHamzaChecked; } set { checkboxHehHamzaChecked = value; RaisePropertyChangedEvent("CheckboxHehHamzaChecked"); } }
-        public bool CheckboxRDigitsChecked { get { return checkboxRDigitsChecked; } set { checkboxRDigitsChecked = value; RaisePropertyChangedEvent("CheckboxRDigitsChecked"); } }
-        public bool CheckboxYearSignChecked { get { return checkboxYearSignChecked; } set { checkboxYearSignChecked = value; RaisePropertyChangedEvent("CheckboxYearSignChecked"); } }
-        public bool CheckboxRErabsChecked { get { return checkboxRErabsChecked; } set { checkboxRErabsChecked = value; RaisePropertyChangedEvent("CheckboxRErabsChecked"); } }
-        public bool CheckboxRKashidaChecked { get { return checkboxRKashidaChecked; } set { checkboxRKashidaChecked = value; RaisePropertyChangedEvent("CheckboxRKashidaChecked"); } }
-        public bool CheckboxRDoubleSpaceChecked { get { return checkboxRDoubleSpaceChecked; } set { checkboxRDoubleSpaceChecked = value; RaisePropertyChangedEvent("CheckboxRDoubleSpaceChecked"); } }
-        public bool CheckboxBariYeeChecked { get { return checkboxBariYeeChecked; } set { checkboxBariYeeChecked = value; RaisePropertyChangedEvent("CheckboxBariYeeChecked"); } }
+
 
         public ConverterViewModel()
         {
@@ -127,9 +128,51 @@ namespace InPageToAutographa
             CharacterMap.init_cpinpage2unicode();
             CharacterMap.init_cpunicode2inpage();
 
+            LoadSettings();
             bgw = new BackgroundWorker();
         }
 
+        private void LoadSettings()
+        {
+
+            CheckboxCorrectYearSignChecked = Properties.Settings.Default.CheckboxCorrectYearSignChecked;
+            CheckboxCorrectHehHamzaChecked= Properties.Settings.Default.CheckboxCorrectHehHamzaChecked;
+            CheckboxCorrectWawHamzaChecked= Properties.Settings.Default.CheckboxCorrectWawHamzaChecked;
+            CheckboxCorrectBariYeeChecked= Properties.Settings.Default.CheckboxCorrectBariYeeChecked;
+
+            CheckboxRemoveDoubleSpaceChecked = Properties.Settings.Default.CheckboxRemoveDoubleSpaceChecked;
+            CheckboxRemoveKashidaChecked= Properties.Settings.Default.CheckboxRemoveKashidaChecked ;
+            CheckboxRemoveErabsChecked= Properties.Settings.Default.CheckboxRemoveErabsChecked;
+
+            CheckboxReverseNumbersDigitsChecked = Properties.Settings.Default.CheckboxReverseNumbersDigitsChecked;
+            CheckboxReverseSolidusSignChecked= Properties.Settings.Default.CheckboxReverseSolidusSignChecked ;
+            CheckboxReverseThousSeparatorChecked= Properties.Settings.Default.CheckboxReverseThousSeparatorChecked;
+            CheckboxReverseQuotMarksChecked= Properties.Settings.Default.CheckboxReverseQuotMarksChecked;
+
+            CheckboxChangePChecked = Properties.Settings.Default.CheckboxChangePChecked;
+            CheckboxChangeCCChecked= Properties.Settings.Default.CheckboxChangeCCChecked;
+        }
+
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.CheckboxCorrectYearSignChecked= CheckboxCorrectYearSignChecked;
+            Properties.Settings.Default.CheckboxCorrectHehHamzaChecked= CheckboxCorrectHehHamzaChecked;
+            Properties.Settings.Default.CheckboxCorrectWawHamzaChecked= CheckboxCorrectWawHamzaChecked;
+            Properties.Settings.Default.CheckboxCorrectBariYeeChecked= CheckboxCorrectBariYeeChecked;
+
+            Properties.Settings.Default.CheckboxRemoveDoubleSpaceChecked= CheckboxRemoveDoubleSpaceChecked;
+            Properties.Settings.Default.CheckboxRemoveKashidaChecked= CheckboxRemoveKashidaChecked;
+            Properties.Settings.Default.CheckboxRemoveErabsChecked= CheckboxRemoveErabsChecked;
+
+            Properties.Settings.Default.CheckboxReverseNumbersDigitsChecked= CheckboxReverseNumbersDigitsChecked;
+            Properties.Settings.Default.CheckboxReverseSolidusSignChecked= CheckboxReverseSolidusSignChecked;
+            Properties.Settings.Default.CheckboxReverseThousSeparatorChecked= CheckboxReverseThousSeparatorChecked;
+            Properties.Settings.Default.CheckboxReverseQuotMarksChecked= CheckboxReverseQuotMarksChecked;
+
+            Properties.Settings.Default.CheckboxChangePChecked= CheckboxChangePChecked;
+            Properties.Settings.Default.CheckboxChangeCCChecked= CheckboxChangeCCChecked;
+            Properties.Settings.Default.Save();
+        }
         private void WriteStatusMessage(string message)
         {
             //TODO: 
@@ -270,7 +313,7 @@ namespace InPageToAutographa
                     else if (binaryData[i + 1] == 169 & !(binaryData[i + 3] == 169))
                     {
                         // //  extra character  " tatbeeq "  pass this character 
-                        if (CheckboxKashidaChecked)
+                        if (CheckboxRemoveKashidaChecked)
                         {
                             outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
                             i += 1;
@@ -485,6 +528,10 @@ namespace InPageToAutographa
                 //ButtonOpenFileEnabled = true;
                 //ButtonInPageFileEnabled = true;
                 BtnConvertText = "Convert";
+
+                USFMConverter.Converter converter = new USFMConverter.Converter();
+                converter.ApplyUSFMTagsToFiles(new List<string> { targetFName });
+
             }
         }
 
@@ -1172,7 +1219,7 @@ namespace InPageToAutographa
             newOutput = newOutput.Replace("-04-A0","?");
             newOutput = newOutput.Replace("-04-A1","?");
             //  newOutput = Replace(newOutput, "-04-A3-04-A2", "?")
-            if (CheckboxHehHamzaChecked)
+            if (CheckboxCorrectHehHamzaChecked)
             {
                 newOutput = newOutput.Replace("-04-A3-04-A2","?");
                 newOutput = newOutput.Replace("-04-BF-04-A2","?");
@@ -1188,7 +1235,7 @@ namespace InPageToAutographa
             if (rbtnUrduChecked)
             {
                 // urdu
-                if (CheckboxHehHamzaChecked)
+                if (CheckboxCorrectHehHamzaChecked)
                 {
                     newOutput = newOutput.Replace("-04-BF-04-A6","?");
                     // testing
@@ -1238,7 +1285,7 @@ namespace InPageToAutographa
             newOutput = newOutput.Replace("-04-A8","?");
             // 2 ZEIR NICHE  
             //remove kashida
-            if (CheckboxRKashidaChecked)
+            if (CheckboxRemoveKashidaChecked)
             {
                 newOutput = newOutput.Replace("-04-A9","");
                 // 169 TATWEEL
@@ -1390,7 +1437,7 @@ namespace InPageToAutographa
             //.
 
             bgw4_new.ReportProgress(20);
-            if (CheckboxQuotMarksChecked)
+            if (CheckboxReverseQuotMarksChecked)
             {
                 newOutput = newOutput.Replace("-04-FE","’");
                 //254
@@ -1529,7 +1576,7 @@ namespace InPageToAutographa
             // Dim searchIndex As Integer = 1
 
 
-            if (CheckboxRDigitsChecked & CheckboxReverseSSignChecked & CheckboxThousSeparatorChecked)
+            if (CheckboxReverseNumbersDigitsChecked & CheckboxReverseSolidusSignChecked & CheckboxReverseThousSeparatorChecked)
             {
                 MatchCollection digitMatches = default(MatchCollection);
 
@@ -1561,7 +1608,7 @@ namespace InPageToAutographa
             }
             else
             {
-                if (CheckboxRDigitsChecked & !CheckboxThousSeparatorChecked)
+                if (CheckboxReverseNumbersDigitsChecked & !CheckboxReverseThousSeparatorChecked)
                 {
                     MatchCollection digitMatches = default(MatchCollection);
 
@@ -1592,7 +1639,7 @@ namespace InPageToAutographa
             newOutput = Regex.Replace(newOutput, regHamzaWAhrab, "?$2$3");
             bgw4_new.ReportProgress(72);
 
-            if (CheckboxBariYeeChecked)
+            if (CheckboxCorrectBariYeeChecked)
             {
                 newOutput = Regex.Replace(newOutput, "(?)" + regUrduAlfabat, "?$2");
             }
@@ -1607,16 +1654,16 @@ namespace InPageToAutographa
             //'////////////////////////////////////
             // optional setting
             // remove Double Space
-            if (CheckboxRDoubleSpaceChecked)
+            if (CheckboxRemoveDoubleSpaceChecked)
             {
                 newOutput = Regex.Replace(newOutput, "[ ]+[ ]", " ");
             }
 
-            if (CheckboxRErabsChecked)
+            if (CheckboxRemoveErabsChecked)
             {
                 newOutput = Regex.Replace(newOutput, regRemoveAhrab, "");
             }
-            if (CheckboxYearSignChecked)
+            if (CheckboxCorrectYearSignChecked)
             {
                 newOutput = Regex.Replace(newOutput, "(?)(?)", "$2$1");
                 newOutput = Regex.Replace(newOutput, "(?)(?)", "$2$1");
@@ -1667,25 +1714,25 @@ namespace InPageToAutographa
 
         private void chkReverseSSign_CheckedChanged(System.Object sender, System.EventArgs e)
         {
-            if (CheckboxReverseSSignChecked)
+            if (CheckboxReverseSolidusSignChecked)
             {
-                CheckboxThousSeparatorChecked = true;
+                CheckboxReverseThousSeparatorChecked = true;
             }
             else
             {
-                CheckboxThousSeparatorChecked = false;
+                CheckboxReverseThousSeparatorChecked = false;
             }
         }
 
         private void chkThousSeparator_CheckedChanged(System.Object sender, System.EventArgs e)
         {
-            if (CheckboxThousSeparatorChecked)
+            if (CheckboxReverseThousSeparatorChecked)
             {
-                CheckboxReverseSSignChecked = true;
+                CheckboxReverseSolidusSignChecked = true;
             }
             else
             {
-                CheckboxReverseSSignChecked = false;
+                CheckboxReverseSolidusSignChecked = false;
             }
         }
 

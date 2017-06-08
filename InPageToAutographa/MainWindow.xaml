@@ -35,25 +35,25 @@
                     <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <GroupBox Header="Correct" HorizontalAlignment="Center">
                             <WrapPanel>
-                        <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxYearSignChecked, Mode=TwoWay}">Year Sign</CheckBox>
-                        <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxHehHamzaChecked, Mode=TwoWay}">Heh with Hamza</CheckBox>
-                        <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxWawHamzaChecked, Mode=TwoWay}">Waw with Hamza</CheckBox>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxBariYeeChecked, Mode=TwoWay}">Bari Ya</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectYearSignChecked, Mode=TwoWay}">Year Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectHehHamzaChecked, Mode=TwoWay}">Heh with Hamza</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectWawHamzaChecked, Mode=TwoWay}">Waw with Hamza</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectBariYeeChecked    , Mode=TwoWay}">Bari Ya</CheckBox>
                             </WrapPanel>
                         </GroupBox>
                         <GroupBox Header="Remove" HorizontalAlignment="Center">
                             <WrapPanel>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRDoubleSpaceChecked, Mode=TwoWay}">Double Space</CheckBox>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRKashidaChecked, Mode=TwoWay}">Kashida Sign</CheckBox>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRErabsChecked, Mode=TwoWay}">All Erabs</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRemoveDoubleSpaceChecked, Mode=TwoWay}">Double Space</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRemoveKashidaChecked, Mode=TwoWay}">Kashida Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRemoveErabsChecked, Mode=TwoWay}">All Erabs</CheckBox>
                             </WrapPanel>
                         </GroupBox>
                         <GroupBox Header="Reverse" HorizontalAlignment="Center">
                             <WrapPanel>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRDigitsChecked, Mode=TwoWay}">Numbers / Digits</CheckBox>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseSSignChecked, Mode=TwoWay}">Solidus (/) Sign</CheckBox>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxThousSeparatorChecked, Mode=TwoWay}">Thousands Seperator</CheckBox>
-                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxQuotMarksChecked, Mode=TwoWay}">Quotation Marks</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseNumbersDigitsChecked, Mode=TwoWay}">Numbers / Digits</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseSolidusSignChecked, Mode=TwoWay}">Solidus (/) Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseThousSeparatorChecked, Mode=TwoWay}">Thousands Seperator</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseQuotMarksChecked, Mode=TwoWay}">Quotation Marks</CheckBox>
                             </WrapPanel>
                         </GroupBox>
                     </WrapPanel>

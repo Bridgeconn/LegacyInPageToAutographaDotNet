@@ -9,6 +9,9 @@ namespace USFMConverter
 {
     public class Converter
     {
+        private static short chapterCounter;
+        private static short verseCounter;
+
         public List<string> ApplyUSFMTagsToFiles(List<string> fileList)
         {
             List<string> newFileList = new List<string>();
@@ -31,12 +34,32 @@ namespace USFMConverter
 
         private string GetNewFileName(string fileName)
         {
-            return fileName; // TODO
+            return Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName) + "_usfm.txt";
         }
 
         private string GetProcessedLine(string line)
         {
-            return line; // TODO
+            if(ChapterNeedsToBeAdded())
+            {
+                line = "\\c " + chapterCounter + " " + line;
+            }
+            else if(VerseNeedsToBeAdded())
+            {
+                line = "\\v " + verseCounter + " " + line;
+            }
+
+            return line; 
+        }
+
+
+        private bool ChapterNeedsToBeAdded()
+        {
+            return false;
+        }
+
+        private bool VerseNeedsToBeAdded()
+        {
+            return false;
         }
     }
 }
