@@ -76,7 +76,7 @@ namespace InPageToAutographa
                 RaisePropertyChangedEvent("IsProgressBarVisible");
             }
         }
-        private bool checkboxYieChecked;
+        private bool checkboxAdditionalBaariYieChecked;
         private bool checkboxRemoveKashidaChecked;
         private bool checkboxChangePChecked;
         private bool checkboxChangeCCChecked;
@@ -90,17 +90,39 @@ namespace InPageToAutographa
         private bool checkboxRemoveErabsChecked;
         private bool checkboxRemoveDoubleSpaceChecked;
         private bool checkboxCorrectBariYeeChecked;
-        private bool CheckboxBYieChecked
+        private bool checkboxAdditionalKashidaChecked;
+        private string statusBarText;
+        public string StatusBarText
+        {
+            get { return statusBarText; }
+            set { statusBarText = value;
+                RaisePropertyChangedEvent("StatusBarText");
+            }
+        }
+        public bool CheckboxAdditionalKashidaChecked
         {
             get
             {
-                return checkboxYieChecked;
+                return checkboxAdditionalKashidaChecked;
             }
 
             set
             {
-                checkboxYieChecked = value;
-                RaisePropertyChangedEvent("CheckboxYieChecked");
+                checkboxAdditionalKashidaChecked = value;
+                RaisePropertyChangedEvent("CheckboxAdditionalKashidaChecked");
+            }
+        }
+        public bool CheckboxAdditionalBaariYieChecked
+        {
+            get
+            {
+                return checkboxAdditionalBaariYieChecked;
+            }
+
+            set
+            {
+                checkboxAdditionalBaariYieChecked = value;
+                RaisePropertyChangedEvent("CheckboxAdditionalBaariYieChecked");
             }
         }
 
@@ -151,38 +173,47 @@ namespace InPageToAutographa
 
             CheckboxChangePChecked = Properties.Settings.Default.CheckboxChangePChecked;
             CheckboxChangeCCChecked= Properties.Settings.Default.CheckboxChangeCCChecked;
+
+            CheckboxAdditionalBaariYieChecked = Properties.Settings.Default.CheckboxAdditionalBaariYieChecked;
+            CheckboxAdditionalKashidaChecked = Properties.Settings.Default.CheckboxAdditionalKashidaChecked;
         }
 
         private void SaveSettings()
         {
-            Properties.Settings.Default.CheckboxCorrectYearSignChecked= CheckboxCorrectYearSignChecked;
-            Properties.Settings.Default.CheckboxCorrectHehHamzaChecked= CheckboxCorrectHehHamzaChecked;
-            Properties.Settings.Default.CheckboxCorrectWawHamzaChecked= CheckboxCorrectWawHamzaChecked;
-            Properties.Settings.Default.CheckboxCorrectBariYeeChecked= CheckboxCorrectBariYeeChecked;
+            Properties.Settings.Default.CheckboxCorrectYearSignChecked = CheckboxCorrectYearSignChecked;
+            Properties.Settings.Default.CheckboxCorrectHehHamzaChecked = CheckboxCorrectHehHamzaChecked;
+            Properties.Settings.Default.CheckboxCorrectWawHamzaChecked = CheckboxCorrectWawHamzaChecked;
+            Properties.Settings.Default.CheckboxCorrectBariYeeChecked = CheckboxCorrectBariYeeChecked;
 
-            Properties.Settings.Default.CheckboxRemoveDoubleSpaceChecked= CheckboxRemoveDoubleSpaceChecked;
-            Properties.Settings.Default.CheckboxRemoveKashidaChecked= CheckboxRemoveKashidaChecked;
-            Properties.Settings.Default.CheckboxRemoveErabsChecked= CheckboxRemoveErabsChecked;
+            Properties.Settings.Default.CheckboxRemoveDoubleSpaceChecked = CheckboxRemoveDoubleSpaceChecked;
+            Properties.Settings.Default.CheckboxRemoveKashidaChecked = CheckboxRemoveKashidaChecked;
+            Properties.Settings.Default.CheckboxRemoveErabsChecked = CheckboxRemoveErabsChecked;
 
-            Properties.Settings.Default.CheckboxReverseNumbersDigitsChecked= CheckboxReverseNumbersDigitsChecked;
-            Properties.Settings.Default.CheckboxReverseSolidusSignChecked= CheckboxReverseSolidusSignChecked;
-            Properties.Settings.Default.CheckboxReverseThousSeparatorChecked= CheckboxReverseThousSeparatorChecked;
-            Properties.Settings.Default.CheckboxReverseQuotMarksChecked= CheckboxReverseQuotMarksChecked;
+            Properties.Settings.Default.CheckboxReverseNumbersDigitsChecked = CheckboxReverseNumbersDigitsChecked;
+            Properties.Settings.Default.CheckboxReverseSolidusSignChecked = CheckboxReverseSolidusSignChecked;
+            Properties.Settings.Default.CheckboxReverseThousSeparatorChecked = CheckboxReverseThousSeparatorChecked;
+            Properties.Settings.Default.CheckboxReverseQuotMarksChecked = CheckboxReverseQuotMarksChecked;
 
-            Properties.Settings.Default.CheckboxChangePChecked= CheckboxChangePChecked;
-            Properties.Settings.Default.CheckboxChangeCCChecked= CheckboxChangeCCChecked;
+            Properties.Settings.Default.CheckboxChangePChecked = CheckboxChangePChecked;
+            Properties.Settings.Default.CheckboxChangeCCChecked = CheckboxChangeCCChecked;
+
+            Properties.Settings.Default.CheckboxAdditionalBaariYieChecked = CheckboxAdditionalBaariYieChecked;
+            Properties.Settings.Default.CheckboxAdditionalKashidaChecked = CheckboxAdditionalKashidaChecked;
+
             Properties.Settings.Default.Save();
         }
+
         private void WriteStatusMessage(string message)
         {
-            //TODO: 
+            StatusBarText = message;
         }
 
-        private void btnOpenDlg_Click(System.Object sender, System.EventArgs e)
+        private void btnOpenDlg_Click()
         {
             OpenFileDialog OFD = new OpenFileDialog();
             OFD.Filter = "Inpage files (*.inp)|*.inp|All files (*.*)|*.*";
             OFD.Title = "Open inpage file";
+            OFD.Multiselect = false;
 
             if (OFD.ShowDialog() == true)
             {
@@ -200,8 +231,7 @@ namespace InPageToAutographa
                 {
                     //txtSourceLocation.Text = OFD.FileName;
                     sourceFName = OFD.FileName;
-                    //txtTatgetLocation.Text = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_convert.txt";
-                    //targetFName = txtTatgetLocation.Text;
+                    targetFName = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_convert.txt";
                     targetFName_Sp = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_with_out_spaces.txt";
                     WriteStatusMessage("Ready to convert");
                     //ButtonConvertEnabled = true;
@@ -216,9 +246,14 @@ namespace InPageToAutographa
             }
         }
 
-        public ICommand ConvertTextCommand
+        public ICommand ConvertFilesCommand
         {
             get { return new DelegateCommand(btnConvert_Click); }
+        }
+
+        public ICommand SelectFilesCommand
+        {
+            get { return new DelegateCommand(btnOpenDlg_Click); }
         }
 
         private void btnConvert_Click()
@@ -279,9 +314,11 @@ namespace InPageToAutographa
                         // 1574 ? ya   shift + 4
                         i += 1;
                     }
-                    else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128) | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184 | binaryData[i + 3] == 185 | binaryData[i + 3] == 200 | binaryData[i + 3] == 201))
+                    else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128) 
+                        | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184 
+                        | binaryData[i + 3] == 185 | binaryData[i + 3] == 200 | binaryData[i + 3] == 201))
                     {
-                        if (CheckboxBYieChecked == true)
+                        if (CheckboxAdditionalBaariYieChecked == true)
                         {
                             outPut += Convert.ToChar(1740).ToString();
                             //bari-ya ? convert to  ? ?  
@@ -313,7 +350,7 @@ namespace InPageToAutographa
                     else if (binaryData[i + 1] == 169 & !(binaryData[i + 3] == 169))
                     {
                         // //  extra character  " tatbeeq "  pass this character 
-                        if (CheckboxRemoveKashidaChecked)
+                        if (CheckboxAdditionalKashidaChecked)
                         {
                             outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
                             i += 1;
@@ -485,6 +522,7 @@ namespace InPageToAutographa
             {
                 try
                 {
+                    targetFName = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_unicode.txt";
                     System.IO.File.WriteAllText(targetFName, outPut, System.Text.Encoding.UTF8);
                 }
                 catch (Exception ex)
@@ -494,7 +532,7 @@ namespace InPageToAutographa
 
                 Remove_Spaces();
 
-                MessageBox.Show("Done");
+                //MessageBox.Show("Done");
                 outPut = " ";
                 outPut_Sp = "";
                 start_test = false;
@@ -757,9 +795,14 @@ namespace InPageToAutographa
                             // 1574 ? ya   shift + 4
                             i += 1;
                         }
-                        else if (ipByte[i + 1] == 165 & ((167 > ipByte[i + 3] & ipByte[i + 3] > 128) | (750 > ipByte[i + 3] & ipByte[i + 3] > 338) | (8485 > ipByte[i + 3] & ipByte[i + 3] > 8210) | ipByte[i + 3] == 170 | ipByte[i + 3] == 182 | ipByte[i + 3] == 184 | ipByte[i + 3] == 185 | ipByte[i + 3] == 200 | ipByte[i + 3] == 201))
+                        else if (ipByte[i + 1] == 165 & ((167 > ipByte[i + 3] & ipByte[i + 3] > 128) 
+                            | (750 > ipByte[i + 3] & ipByte[i + 3] > 338) 
+                            | (8485 > ipByte[i + 3] & ipByte[i + 3] > 8210) 
+                            | ipByte[i + 3] == 170 | ipByte[i + 3] == 182 
+                            | ipByte[i + 3] == 184 | ipByte[i + 3] == 185 
+                            | ipByte[i + 3] == 200 | ipByte[i + 3] == 201))
                         {
-                            if (CheckboxBYieChecked == true)
+                            if (CheckboxAdditionalBaariYieChecked == true)
                             {
                                 ucOutput += Convert.ToChar(1740).ToString();
                                 //bari-ya ? convert to  ? ?  
@@ -1695,7 +1738,7 @@ namespace InPageToAutographa
             // Form1.RichTextBox1.Text = sample
             //Form1.Show()
             //MsgBox(" Words count = " & slength / 2 & " Digits Reverse  = " & digitMatches.Count)
-            MessageBox.Show("Done");
+            //MessageBox.Show("Done");
         }
 
         private void bgw4_new_ProgressChanged(System.Object sender, System.ComponentModel.ProgressChangedEventArgs e)

@@ -178,5 +178,29 @@ namespace InPageToAutographa.Properties {
                 this["CheckboxChangeCCChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckboxAdditionalBaariYieChecked {
+            get {
+                return ((bool)(this["CheckboxAdditionalBaariYieChecked"]));
+            }
+            set {
+                this["CheckboxAdditionalBaariYieChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckboxAdditionalKashidaChecked {
+            get {
+                return ((bool)(this["CheckboxAdditionalKashidaChecked"]));
+            }
+            set {
+                this["CheckboxAdditionalKashidaChecked"] = value;
+            }
+        }
     }
 }

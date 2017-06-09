@@ -14,6 +14,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height=".05*"></RowDefinition>
+            <RowDefinition Height=".1*"></RowDefinition>
+        </Grid.RowDefinitions>
         <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
             <TabItem Header="▶ About">
                 <Grid Background="#FFE5E5E5">
@@ -59,8 +64,8 @@
                     </WrapPanel>
                     <ListBox  Grid.Column="0" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="10,0,10,0" />
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
-                        <Button Margin="10" Padding="2,3,4,5" Content="Select InPage Files" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center" />
-                        <Button Margin="10" Padding="2,3,4,5" Command="{Binding ConvertTextCommand}" Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
+                        <Button Margin="10" Padding="2,3,4,5"  Command="{Binding SelectFilesCommand}" Content="Select InPage Files" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center" />
+                        <Button Margin="10" Padding="2,3,4,5" Command="{Binding ConvertFilesCommand}" Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
                     </StackPanel>
                 </Grid>
 
@@ -111,6 +116,7 @@
 
             </TabItem>
         </TabControl>
-
+        <ProgressBar Grid.Row="1" Value="{Binding ProgressBarValue}" Visibility="{Binding IsProgressBarVisible}"></ProgressBar>
+        <Label HorizontalAlignment="Center" Grid.Row="2" Content="{Binding StatusBarText}" Foreground="Blue"></Label>
     </Grid>
 </Window>
