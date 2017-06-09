@@ -41,7 +41,7 @@ namespace USFMConverter
 
         private bool ApplyUSFMTags(string sourceFilename, string targetFileName)
         {
-            File.WriteAllLines(targetFileName, File.ReadAllLines(sourceFilename).Select(line => GetProcessedLine(line)).ToArray());
+            File.WriteAllLines(targetFileName, File.ReadAllLines(sourceFilename).Select(line => GetProcessedLine(line)).ToArray(), Encoding.UTF8);
             return true;
         }
 
