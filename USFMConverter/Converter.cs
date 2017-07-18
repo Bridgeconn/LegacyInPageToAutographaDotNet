@@ -118,7 +118,7 @@ namespace USFMConverter
 
                     line = "\\c " + ++chapterCounter + " " + line;
 
-                    verseCounter = 1;
+                    verseCounter = 0;
 
                     return true;
                 }
@@ -139,7 +139,7 @@ namespace USFMConverter
                         {
                             line = digitsWithDotOrHyphen.Replace(line, "");
                             line = "\\c " + ++chapterCounter + " " + line;
-                            verseCounter = 1;
+                            verseCounter = 0;
                             return true;
                         }
                     }

@@ -301,6 +301,7 @@ namespace InPageToAutographa
             int startP = CharacterMap.FindStartPosition(binaryData);
             int endP = CharacterMap.FindEndPosition(binaryData, startP);
 
+            string digitBuffer="";
 
             for (int i = startP; i <= endP; i++)
             {
@@ -314,8 +315,8 @@ namespace InPageToAutographa
                         // 1574 ? ya   shift + 4
                         i += 1;
                     }
-                    else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128) 
-                        | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184 
+                    else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128)
+                        | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184
                         | binaryData[i + 3] == 185 | binaryData[i + 3] == 200 | binaryData[i + 3] == 201))
                     {
                         if (CheckboxAdditionalBaariYieChecked == true)
@@ -503,9 +504,34 @@ namespace InPageToAutographa
                     }
                     else
                     {
-                        outPut += Convert.ToChar(binaryData[i]).ToString();
+                        if (!(47 < binaryData[i] & binaryData[i] < 58) && string.IsNullOrEmpty(digitBuffer))
+                        {
+                            outPut += Convert.ToChar(binaryData[i]);
+                        }
+                        else 
+                           
+                        {
+                            if((47 < binaryData[i] & binaryData[i] < 58) & (47 > binaryData[i + 1] || binaryData[i + 1] > 58))
+                            {
+                                // do processing
+                                if(outPut.LastIndexOf(".") ==  outPut.Length-1)
+                                {
+                                    outPut = outPut.Remove(outPut.Length - 1);
+                                }
+                                outPut += Convert.ToChar(13);
+                                outPut += Convert.ToChar(10);
+                                outPut += Convert.ToChar(9);
+                                outPut += digitBuffer + Convert.ToChar(binaryData[i]); 
+                                // clear buffer and set digBuff
+                                digitBuffer = "";
+                            }
+                            else
+                            {
+                                // store up
+                                digitBuffer+= Convert.ToChar(binaryData[i]);
+                            }
+                        }
                     }
-
                 }
                 else if (256 > binaryData[i] & binaryData[i] > 32)
                 {
@@ -539,6 +565,29 @@ namespace InPageToAutographa
             }
 
         }
+
+        private int GetIndexOfNonDigit(int currentIndex)
+        {
+            int index = currentIndex;
+            int relativeIndex = 0;
+            while(47 < binaryData[index -1] & binaryData[index-1] < 58)
+            {
+                index--;
+                relativeIndex++;
+            }
+            return relativeIndex;
+        }
+        //private bool IsPartOfANumber(int currentIndex, int numberOfIndexes)
+        //{
+        //    for (int index = currentIndex; index >numberOfIndexes; index++)
+        //    {
+        //        if (47 < binaryData[index] & binaryData[index] < 58)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         private void bgw_ProgressChanged(System.Object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {

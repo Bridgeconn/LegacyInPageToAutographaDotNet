@@ -22,7 +22,7 @@
         <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
             <TabItem Header="▶ About">
                 <Grid Background="#FFE5E5E5">
-                    <TextBlock Margin="10" TextWrapping="Wrap">A bit of an introduction and perhaps a broad set of guidelines. Also a contact email-id for any queries could go here.</TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> This helps us to convert InPage documents to Unicoded USFM tagged .TXT documents.  </TextBlock>
                 </Grid>
 
             </TabItem>

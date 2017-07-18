@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InPageToAutographa", "InPageToAutographa\InPageToAutographa.csproj", "{8FD39926-8590-466C-B214-1B7A2B7B955C}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USFMConverter", "USFMConverter\USFMConverter.csproj", "{44DAE0ED-61CC-4D94-A26D-B7072A1231B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{B9C22069-7AD6-4153-B43B-AC450B8D5E17}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{CCB1353F-155B-4F44-A658-50FA919543C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,8 @@ Global
 		{B9C22069-7AD6-4153-B43B-AC450B8D5E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9C22069-7AD6-4153-B43B-AC450B8D5E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9C22069-7AD6-4153-B43B-AC450B8D5E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCB1353F-155B-4F44-A658-50FA919543C1}.Debug|Any CPU.ActiveCfg = Debug
+		{CCB1353F-155B-4F44-A658-50FA919543C1}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
