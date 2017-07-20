@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:Installer"
+"ProjectName" = "8:InPageToAutographa Installer"
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
@@ -17,6 +17,12 @@
         {
         "MsmKey" = "8:_2628A87F87EA647B58FCB66863767F42"
         "OwnerKey" = "8:_EBE56D8875324C66B2FD361CDB43A09F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3FB489DC16E84985AEA3BE9B80D569DB"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -40,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4BC2E365CA11499ABFC96C4DDA757603"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EBE56D8875324C66B2FD361CDB43A09F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -61,6 +61,12 @@
         "OwnerKey" = "8:_B0CCB1E5BCC7E22D808EB6B7E119482C"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4BC2E365CA11499ABFC96C4DDA757603"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -69,7 +75,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\Installer.msi"
+        "OutputFilename" = "8:Debug\\InPageToAutographaInstaller.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -79,6 +85,27 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5.2"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -95,6 +122,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -153,6 +188,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3FB489DC16E84985AEA3BE9B80D569DB"
+            {
+            "SourcePath" = "8:C:\\Users\\john\\Desktop\\InPageToAutographa Icon.ico"
+            "TargetName" = "8:InPageToAutographa Icon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_AB40A9D2518D4C1484914082A43A007D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4BC2E365CA11499ABFC96C4DDA757603"
@@ -272,9 +327,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Installer"
+        "ProductName" = "8:InPageToAutographa"
         "ProductCode" = "8:{4BF47201-D01A-4FFE-A693-AA5ED418FBF0}"
-        "PackageCode" = "8:{C507C6C6-5E89-4706-B98A-7B46905AB53B}"
+        "PackageCode" = "8:{14A1C527-F8FA-4A3A-8A2C-1049FA4EDEA1}"
         "UpgradeCode" = "8:{F2D483AB-FDF2-4763-A307-24B85EAA0209}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -282,12 +337,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:Bridgeconn"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Installer"
+        "Title" = "8:InPageToAutographa"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
+        "ARPCONTACT" = "8:Bridgeconn"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -396,7 +451,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_644E47DC388541AE925541A6F07BEC04"
             {
-            "Name" = "8:Shortcut to Primary output from InPageToAutographa (Active)"
+            "Name" = "8:InPageToAutographa"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -405,12 +460,26 @@
             "Target" = "8:_EBE56D8875324C66B2FD361CDB43A09F"
             "Folder" = "8:_AB40A9D2518D4C1484914082A43A007D"
             "WorkingFolder" = "8:_AB40A9D2518D4C1484914082A43A007D"
-            "Icon" = "8:"
+            "Icon" = "8:_3FB489DC16E84985AEA3BE9B80D569DB"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_94F6A965E1974BB4AA9CCF0F1DAFD8E2"
+            {
+            "Name" = "8:InPageToAutographa"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_EBE56D8875324C66B2FD361CDB43A09F"
+            "Folder" = "8:_2666C0406B59443F8DFF2F4CE8885466"
+            "WorkingFolder" = "8:_AB40A9D2518D4C1484914082A43A007D"
+            "Icon" = "8:_3FB489DC16E84985AEA3BE9B80D569DB"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C116476E444347238D53F123FCBB811D"
             {
-            "Name" = "8:Shortcut to Primary output from InPageToAutographa (Active)"
+            "Name" = "8:InPageToAutographa"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -419,7 +488,7 @@
             "Target" = "8:_EBE56D8875324C66B2FD361CDB43A09F"
             "Folder" = "8:_6FC98209090C45AABF8B556714EB5712"
             "WorkingFolder" = "8:_AB40A9D2518D4C1484914082A43A007D"
-            "Icon" = "8:"
+            "Icon" = "8:_3FB489DC16E84985AEA3BE9B80D569DB"
             "Feature" = "8:"
             }
         }

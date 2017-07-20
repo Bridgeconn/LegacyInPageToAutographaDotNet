@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("InPageToAutographa")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("InPage To Unicoded USFM tagged documents for Autographa")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Bridgeconn")]
 [assembly: AssemblyProduct("InPageToAutographa")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
