@@ -41,8 +41,21 @@ namespace USFMConverter
 
         private bool ApplyUSFMTags(string sourceFilename, string targetFileName)
         {
-            File.WriteAllLines(targetFileName, File.ReadAllLines(sourceFilename).Select(line => GetProcessedLine(line)).ToArray(), Encoding.UTF8);
+            var id = GetFileID(targetFileName);
+            File.WriteAllLines(targetFileName, File.ReadAllLines(sourceFilename).Select(line => GetProcessedLine(line, id)).ToArray(), Encoding.UTF8);
             return true;
+        }
+
+        private string GetFileID(string targetFileName)
+        {
+            string id = "No ID has been prefixed in the filename with an underscore";
+            var fileName = Path.GetFileName(targetFileName);
+            if (fileName.IndexOf('_') == 3)
+            {
+                id = fileName.Substring(0, 3);
+            }
+
+            return id;
         }
 
         private string GetNewFileName(string fileName)
@@ -50,7 +63,7 @@ namespace USFMConverter
             return Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName) + "_usfm.txt";
         }
 
-        private string GetProcessedLine(string line)
+        private string GetProcessedLine(string line, string id)
         {
             if (line.Trim() == string.Empty)
             {
@@ -59,9 +72,11 @@ namespace USFMConverter
 
             if (!IsIDAdded)
             {
-                if (AddIDUSFMTag(ref line))
+                string newline="";
+                if (AddIDUSFMTag(ref newline, id))
                 {
-                    return line;
+                    AddChapterUSFMTag(ref line);
+                    return newline + Environment.NewLine + line;
                 }
             }
             else
@@ -79,7 +94,7 @@ namespace USFMConverter
             return line; 
         }
 
-        private bool AddIDUSFMTag(ref string line)
+        private bool AddIDUSFMTag(ref string line, string id)
         {
             if (IsIDAdded)
             {
@@ -87,20 +102,21 @@ namespace USFMConverter
             }
             else
             {
-                if (digitsWithDotOrHyphen.IsMatch(line))
-                {
-                        var matches = digitsWithDotOrHyphen.Matches(line);
-                        if (matches.Count > 0)
-                        {
-                            line = digitsWithDotOrHyphen.Replace(line, "");
-                        }
-                        line = "\\id " + line + Environment.NewLine + "\\c " + ++chapterCounter;
-                  
-                }
-                else
-                {
-                    line = "\\id " + line;
-                }
+                line = "\\id " + id;
+                //if (digitsWithDotOrHyphen.IsMatch(line))
+                //{
+                //        var matches = digitsWithDotOrHyphen.Matches(line);
+                //        if (matches.Count > 0)
+                //        {
+                //            line = digitsWithDotOrHyphen.Replace(line, "");
+                //        }
+                //        line = "\\id " + line + Environment.NewLine + "\\c " + ++chapterCounter;
+
+                //}
+                //else
+                //{
+                //    line = "\\id " + line;
+                //}
 
                 IsIDAdded = true;
 

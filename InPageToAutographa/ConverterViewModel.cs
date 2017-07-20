@@ -25,6 +25,10 @@ namespace InPageToAutographa
         byte[] binaryData;
         bool start_test = false;
         bool cancel_test = false;
+        string[] inputFileNames;
+        string fileListTitle = "";
+        List<string> targetFileNames = new List<string>();
+
         /////  hot key function /////////////////// 
 
         public const int altKey = 0x1;
@@ -92,6 +96,7 @@ namespace InPageToAutographa
         private bool checkboxCorrectBariYeeChecked;
         private bool checkboxAdditionalKashidaChecked;
         private string statusBarText;
+
         public string StatusBarText
         {
             get { return statusBarText; }
@@ -99,6 +104,18 @@ namespace InPageToAutographa
                 RaisePropertyChangedEvent("StatusBarText");
             }
         }
+
+        
+        public string FileListTitle
+        {
+            get { return fileListTitle; }
+            set
+            {
+                fileListTitle = value;
+                RaisePropertyChangedEvent("FileListTitle");
+            }
+        }
+
         public bool CheckboxAdditionalKashidaChecked
         {
             get
@@ -112,6 +129,7 @@ namespace InPageToAutographa
                 RaisePropertyChangedEvent("CheckboxAdditionalKashidaChecked");
             }
         }
+
         public bool CheckboxAdditionalBaariYieChecked
         {
             get
@@ -143,6 +161,18 @@ namespace InPageToAutographa
         public bool CheckboxChangePChecked { get { return checkboxChangePChecked; } set { checkboxChangePChecked = value; RaisePropertyChangedEvent("CheckboxChangePChecked"); } }
         public bool CheckboxChangeCCChecked { get { return checkboxChangeCCChecked; } set { checkboxChangeCCChecked = value; RaisePropertyChangedEvent("CheckboxChangeCCChecked"); } }
 
+        public string[] SourceFileNames
+        {
+            get
+            {
+                return inputFileNames;
+            }
+            set
+            {
+                inputFileNames = value;
+                RaisePropertyChangedEvent("SourceFileNames");
+            }
+        }
 
         public ConverterViewModel()
         {
@@ -211,16 +241,16 @@ namespace InPageToAutographa
         private void btnOpenDlg_Click()
         {
             OpenFileDialog OFD = new OpenFileDialog();
-            OFD.Filter = "Inpage files (*.inp)|*.inp|All files (*.*)|*.*";
+            OFD.Filter = "Inpage files (*.inp)|*.inp";
             OFD.Title = "Open inpage file";
-            OFD.Multiselect = false;
+            OFD.Multiselect = true;
 
             if (OFD.ShowDialog() == true)
             {
-                if (!(Path.GetExtension(OFD.FileName) == ".inp" | Path.GetExtension(OFD.FileName) == ".INP" | Path.GetExtension(OFD.FileName) == ".txt"))
+                if (OFD.FileNames.Length == 0 || !(Path.GetExtension(OFD.FileName) == ".inp" | Path.GetExtension(OFD.FileName) == ".INP"))
                 {
-                    WriteStatusMessage("Error opening a file");
-                    MessageBox.Show("Please select a inpage file");
+                    WriteStatusMessage("Please select a valid inpage file");
+
                     //txtSourceLocation.Text = "";
                     //txtTatgetLocation.Text = "";
                     //ButtonConvertEnabled = false;
@@ -229,11 +259,10 @@ namespace InPageToAutographa
                 }
                 else
                 {
+                    FileListTitle = "Source files";
                     //txtSourceLocation.Text = OFD.FileName;
-                    sourceFName = OFD.FileName;
-                    targetFName = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_convert.txt";
-                    targetFName_Sp = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_with_out_spaces.txt";
-                    WriteStatusMessage("Ready to convert");
+                    SourceFileNames = OFD.FileNames;
+                    WriteStatusMessage("Ready to convert, please click proceed button");
                     //ButtonConvertEnabled = true;
                     //btnFConvert.Enabled = true;
                     //ButtonInPageFileEnabled = false;
@@ -271,15 +300,7 @@ namespace InPageToAutographa
             {
                 try
                 {
-                    FileInfo finfo = new FileInfo(sourceFName);
-                    long numBytes = finfo.Length;
-                    FileStream fStream = new FileStream(sourceFName, FileMode.Open, FileAccess.Read);
-                    BinaryReader br = new BinaryReader(fStream);
 
-                    binaryData = br.ReadBytes(Convert.ToInt32(numBytes));
-                    br.Close();
-                    fStream.Close();
-                    WriteStatusMessage("Converting ... ");
                     IsProgressBarVisible = true;
                     BtnConvertText = "Cancel";
                     bgw.WorkerReportsProgress = true;
@@ -287,6 +308,7 @@ namespace InPageToAutographa
                     bgw.ProgressChanged += bgw_ProgressChanged;
                     bgw.RunWorkerCompleted += bgw_RunWorkerCompleted;
                     bgw.RunWorkerAsync();
+
                 }
                 catch (Exception ex)
                 {
@@ -297,93 +319,175 @@ namespace InPageToAutographa
 
         private void bgw_DoWork(System.Object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            int p_prog = binaryData.Length / 100;
-            int startP = CharacterMap.FindStartPosition(binaryData);
-            int endP = CharacterMap.FindEndPosition(binaryData, startP);
+            int individualPercentage = 100 / inputFileNames.Length;
 
-            string digitBuffer="";
-
-            for (int i = startP; i <= endP; i++)
+            foreach (var fileName in inputFileNames)
             {
-                if ((binaryData[i] == 4))
-                {
-                    // find hamza position
+                sourceFName = fileName;
+                targetFName = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_unicode.txt";
+                targetFileNames.Add(targetFName);
+                targetFName_Sp = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_with_out_spaces.txt";
 
-                    if (binaryData[i + 1] == 163 & FindHamzaPosition(i))
+                FileInfo finfo = new FileInfo(sourceFName);
+                long numBytes = finfo.Length;
+                FileStream fStream = new FileStream(sourceFName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fStream);
+
+                binaryData = br.ReadBytes(Convert.ToInt32(numBytes));
+                br.Close();
+                fStream.Close();
+                WriteStatusMessage("Currently converting: " + fileName);
+                int p_prog = binaryData.Length / 100;
+                int startP = CharacterMap.FindStartPosition(binaryData);
+                int endP = CharacterMap.FindEndPosition(binaryData, startP);
+
+                string digitBuffer = "";
+
+                for (int i = startP; i <= endP; i++)
+                {
+                    if ((binaryData[i] == 4))
                     {
-                        outPut += Convert.ToChar(1574).ToString();
-                        // 1574 ? ya   shift + 4
-                        i += 1;
-                    }
-                    else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128)
-                        | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184
-                        | binaryData[i + 3] == 185 | binaryData[i + 3] == 200 | binaryData[i + 3] == 201))
-                    {
-                        if (CheckboxAdditionalBaariYieChecked == true)
+                        // find hamza position
+
+                        if (binaryData[i + 1] == 163 & FindHamzaPosition(i))
                         {
-                            outPut += Convert.ToChar(1740).ToString();
-                            //bari-ya ? convert to  ? ?  
+                            outPut += Convert.ToChar(1574).ToString();
+                            // 1574 ? ya   shift + 4
                             i += 1;
                         }
-                        else
+                        else if (binaryData[i + 1] == 165 & ((168 > binaryData[i + 3] & binaryData[i + 3] > 128)
+                            | binaryData[i + 3] == 170 | binaryData[i + 3] == 182 | binaryData[i + 3] == 184
+                            | binaryData[i + 3] == 185 | binaryData[i + 3] == 200 | binaryData[i + 3] == 201))
                         {
-                            outPut += Convert.ToChar(1746).ToString();
-                            i += 1;
-                            if (binaryData[i + 3] == 32)
+                            if (CheckboxAdditionalBaariYieChecked == true)
                             {
-                                i += 2;
-                            }
-                        }
-                    }
-                    else if (binaryData[i + 1] == 161 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | binaryData[i + 2] == 9 | FindHamzaPosition(i + 3) == false | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
-                    {
-                        outPut += Convert.ToChar(1722).ToString();
-                        // add space after ?  noon guna
-                        outPut += Convert.ToChar(32).ToString();
-                        i += 1;
-                    }
-                    else if (((binaryData[i + 1] == 177) & (binaryData[i + 3] == 177)))
-                    {
-                        //  remove 1 jazam 
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
-                        i += 3;
-                    }
-                    else if (binaryData[i + 1] == 169 & !(binaryData[i + 3] == 169))
-                    {
-                        // //  extra character  " tatbeeq "  pass this character 
-                        if (CheckboxAdditionalKashidaChecked)
-                        {
-                            outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
-                            i += 1;
-                        }
-                        else
-                        {
-                            i += 1;
-                        }
-                    }
-                    else if (binaryData[i + 1] == 166 & outPut[outPut.Length - 1].ToString() == Convert.ToChar(1574).ToString())
-                    {
-                        //remove ya-hamza  before hamza
-                        outPut = outPut.Remove(outPut.Length - 1, 1);
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[166]).ToString();
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[191]).ToString();
-                        i += 1;
-                    }
-                    else if (binaryData[i + 1] == 253 | binaryData[i + 1] == 254)
-                    {
-                        //  Change " 
-                        if (CheckboxChangeCCChecked == true)
-                        {
-                            if (binaryData[i + 1] == 253)
-                            {
-                                outPut += Convert.ToChar(CharacterMap.ip2uc[254]).ToString();
+                                outPut += Convert.ToChar(1740).ToString();
+                                //bari-ya ? convert to  ? ?  
                                 i += 1;
                             }
                             else
                             {
-                                outPut += Convert.ToChar(CharacterMap.ip2uc[253]).ToString();
+                                outPut += Convert.ToChar(1746).ToString();
+                                i += 1;
+                                if (binaryData[i + 3] == 32)
+                                {
+                                    i += 2;
+                                }
+                            }
+                        }
+                        else if (binaryData[i + 1] == 161 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | binaryData[i + 2] == 9 | FindHamzaPosition(i + 3) == false | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
+                        {
+                            outPut += Convert.ToChar(1722).ToString();
+                            // add space after ?  noon guna
+                            outPut += Convert.ToChar(32).ToString();
+                            i += 1;
+                        }
+                        else if (((binaryData[i + 1] == 177) & (binaryData[i + 3] == 177)))
+                        {
+                            //  remove 1 jazam 
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
+                            i += 3;
+                        }
+                        else if (binaryData[i + 1] == 169 & !(binaryData[i + 3] == 169))
+                        {
+                            // //  extra character  " tatbeeq "  pass this character 
+                            if (CheckboxAdditionalKashidaChecked)
+                            {
+                                outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]).ToString();
                                 i += 1;
                             }
+                            else
+                            {
+                                i += 1;
+                            }
+                        }
+                        else if (binaryData[i + 1] == 166 & outPut[outPut.Length - 1].ToString() == Convert.ToChar(1574).ToString())
+                        {
+                            //remove ya-hamza  before hamza
+                            outPut = outPut.Remove(outPut.Length - 1, 1);
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[166]).ToString();
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[191]).ToString();
+                            i += 1;
+                        }
+                        else if (binaryData[i + 1] == 253 | binaryData[i + 1] == 254)
+                        {
+                            //  Change " 
+                            if (CheckboxChangeCCChecked == true)
+                            {
+                                if (binaryData[i + 1] == 253)
+                                {
+                                    outPut += Convert.ToChar(CharacterMap.ip2uc[254]).ToString();
+                                    i += 1;
+                                }
+                                else
+                                {
+                                    outPut += Convert.ToChar(CharacterMap.ip2uc[253]).ToString();
+                                    i += 1;
+                                }
+                            }
+                            else
+                            {
+                                outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]);
+                                i += 1;
+                            }
+
+                        }
+                        else if (binaryData[i + 1] == 224)
+                        {
+                            // ... double  
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[224]).ToString();
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[224]).ToString();
+                            i += 1;
+                        }
+                        else if (binaryData[i + 1] == 184 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | binaryData[i + 2] == 9 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
+                        {
+                            // add space after ?
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[184]).ToString();
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[32]).ToString();
+                            i += 1;
+                        }
+                        else if (((binaryData[i + 1] == 162 | binaryData[i + 1] == 182) & outPut[outPut.Length - 1].ToString() == Convert.ToChar(1574).ToString()))
+                        {
+                            //remove ya-hamza befor wao-haza or wao
+                            outPut = outPut.Remove(outPut.Length - 1, 1);
+                            outPut += Convert.ToChar(CharacterMap.ip2uc[182]).ToString();
+                            i += 1;
+                        }
+                        else if ((218 > binaryData[i + 1] & binaryData[i + 1] > 207) & ((218 > binaryData[i + 3] & binaryData[i + 3] > 207) | (binaryData[i + 3] == 223 | binaryData[i + 2] == 47)))
+                        {
+                            //ginti ;)                                                          
+
+                            string temValue = "";
+                            while (!(!((218 > binaryData[i + 1] & binaryData[i + 1] > 207) | (binaryData[i + 1] == 223 | binaryData[i] == 47))))
+                            {
+                                if (binaryData[i] == 47)
+                                {
+                                    temValue += Convert.ToChar(47).ToString();
+                                }
+                                else
+                                {
+                                    temValue += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])].ToString());
+                                }
+
+                                if (binaryData[i + 1] == 47 | binaryData[i] == 47)
+                                {
+                                    i += 1;
+                                }
+                                else
+                                {
+                                    i += 2;
+                                }
+
+                            }
+                            if (CheckboxChangePChecked == false)
+                            {
+                                outPut += CharacterMap.ChangePositon(temValue);
+                            }
+                            else
+                            {
+                                outPut += temValue;
+                            }
+                            i -= 1;
                         }
                         else
                         {
@@ -391,179 +495,115 @@ namespace InPageToAutographa
                             i += 1;
                         }
 
-                    }
-                    else if (binaryData[i + 1] == 224)
-                    {
-                        // ... double  
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[224]).ToString();
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[224]).ToString();
-                        i += 1;
-                    }
-                    else if (binaryData[i + 1] == 184 & !(binaryData[i + 3] == 32 | binaryData[i + 2] == 13 | binaryData[i + 2] == 9 | (255 > binaryData[i + 3] & binaryData[i + 3] > 202) | (198 > binaryData[i + 3] & binaryData[i + 3] > 167)))
-                    {
-                        // add space after ?
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[184]).ToString();
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[32]).ToString();
-                        i += 1;
-                    }
-                    else if (((binaryData[i + 1] == 162 | binaryData[i + 1] == 182) & outPut[outPut.Length - 1].ToString() == Convert.ToChar(1574).ToString()))
-                    {
-                        //remove ya-hamza befor wao-haza or wao
-                        outPut = outPut.Remove(outPut.Length - 1, 1);
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[182]).ToString();
-                        i += 1;
-                    }
-                    else if ((218 > binaryData[i + 1] & binaryData[i + 1] > 207) & ((218 > binaryData[i + 3] & binaryData[i + 3] > 207) | (binaryData[i + 3] == 223 | binaryData[i + 2] == 47)))
-                    {
-                        //ginti ;)                                                          
 
-                        string temValue = "";
-                        while (!(!((218 > binaryData[i + 1] & binaryData[i + 1] > 207) | (binaryData[i + 1] == 223 | binaryData[i] == 47))))
+                    }
+                    else if (binaryData[i] == 32)
+                    {
+                        outPut += Convert.ToChar(32);
+                    }
+                    else if (binaryData[i] == 13)
+                    {
+                        outPut += Convert.ToChar(13);
+                        outPut += Convert.ToChar(10);
+                        i += 3;
+                    }
+                    else if (binaryData[i] == 9)
+                    {
+                        outPut += Convert.ToChar(9);
+
+                    }
+                    else if (64 > binaryData[i] & binaryData[i] > 32)
+                    {
+
+                        if ((58 > binaryData[i] & binaryData[i] > 47) & binaryData[i + 1] == 32)
                         {
-                            if (binaryData[i] == 47)
+                            bool boolChkEnter = false;
+                            string my_tempVar = "";
+                            // Or my_binaryData[i] = 47)
+                            while (!(!((58 > binaryData[i] & binaryData[i] > 47) | binaryData[i] == 32)))
                             {
-                                temValue += Convert.ToChar(47).ToString();
-                            }
-                            else
-                            {
-                                temValue += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])].ToString());
-                            }
-
-                            if (binaryData[i + 1] == 47 | binaryData[i] == 47)
-                            {
+                                boolChkEnter = true;
+                                my_tempVar += Convert.ToChar(binaryData[i]).ToString();
                                 i += 1;
                             }
+                            if (CheckboxChangePChecked == false)
+                            {
+                                outPut += CharacterMap.ChangePositon(my_tempVar);
+                            }
                             else
                             {
-                                i += 2;
+                                outPut += my_tempVar;
+                            }
+
+
+                            if (boolChkEnter)
+                            {
+                                i -= 1;
                             }
 
                         }
-                        if (CheckboxChangePChecked == false)
-                        {
-                            outPut += CharacterMap.ChangePositon(temValue);
-                        }
                         else
                         {
-                            outPut += temValue;
-                        }
-                        i -= 1;
-                    }
-                    else
-                    {
-                        outPut += Convert.ToChar(CharacterMap.ip2uc[Convert.ToInt32(binaryData[i + 1])]);
-                        i += 1;
-                    }
-
-
-                }
-                else if (binaryData[i] == 32)
-                {
-                    outPut += Convert.ToChar(32);
-                }
-                else if (binaryData[i] == 13)
-                {
-                    outPut += Convert.ToChar(13);
-                    outPut += Convert.ToChar(10);
-                    i += 3;
-                }
-                else if (binaryData[i] == 9)
-                {
-                    outPut += Convert.ToChar(9);
-
-                }
-                else if (64 > binaryData[i] & binaryData[i] > 32)
-                {
-
-                    if ((58 > binaryData[i] & binaryData[i] > 47) & binaryData[i + 1] == 32)
-                    {
-                        bool boolChkEnter = false;
-                        string my_tempVar = "";
-                        // Or my_binaryData[i] = 47)
-                        while (!(!((58 > binaryData[i] & binaryData[i] > 47) | binaryData[i] == 32)))
-                        {
-                            boolChkEnter = true;
-                            my_tempVar += Convert.ToChar(binaryData[i]).ToString();
-                            i += 1;
-                        }
-                        if (CheckboxChangePChecked == false)
-                        {
-                            outPut += CharacterMap.ChangePositon(my_tempVar);
-                        }
-                        else
-                        {
-                            outPut += my_tempVar;
-                        }
-
-
-                        if (boolChkEnter)
-                        {
-                            i -= 1;
-                        }
-
-                    }
-                    else
-                    {
-                        if (!(47 < binaryData[i] & binaryData[i] < 58) && string.IsNullOrEmpty(digitBuffer))
-                        {
-                            outPut += Convert.ToChar(binaryData[i]);
-                        }
-                        else 
-                           
-                        {
-                            if((47 < binaryData[i] & binaryData[i] < 58) & (47 > binaryData[i + 1] || binaryData[i + 1] > 58))
+                            if (!(47 < binaryData[i] & binaryData[i] < 58) && string.IsNullOrEmpty(digitBuffer))
                             {
-                                // do processing
-                                if(outPut.LastIndexOf(".") ==  outPut.Length-1)
+                                outPut += Convert.ToChar(binaryData[i]);
+                            }
+                            else
+
+                            {
+                                if ((47 < binaryData[i] & binaryData[i] < 58) & (47 > binaryData[i + 1] || binaryData[i + 1] > 58))
                                 {
-                                    outPut = outPut.Remove(outPut.Length - 1);
+                                    // do processing
+                                    if (outPut.LastIndexOf(".") == outPut.Length - 1)
+                                    {
+                                        outPut = outPut.Remove(outPut.Length - 1);
+                                    }
+                                    outPut += Convert.ToChar(13);
+                                    outPut += Convert.ToChar(10);
+                                    outPut += Convert.ToChar(9);
+                                    outPut += digitBuffer + Convert.ToChar(binaryData[i]);
+                                    // clear buffer and set digBuff
+                                    digitBuffer = "";
                                 }
-                                outPut += Convert.ToChar(13);
-                                outPut += Convert.ToChar(10);
-                                outPut += Convert.ToChar(9);
-                                outPut += digitBuffer + Convert.ToChar(binaryData[i]); 
-                                // clear buffer and set digBuff
-                                digitBuffer = "";
-                            }
-                            else
-                            {
-                                // store up
-                                digitBuffer+= Convert.ToChar(binaryData[i]);
+                                else
+                                {
+                                    // store up
+                                    digitBuffer += Convert.ToChar(binaryData[i]);
+                                }
                             }
                         }
                     }
-                }
-                else if (256 > binaryData[i] & binaryData[i] > 32)
-                {
-                    outPut += Convert.ToChar(binaryData[i]).ToString();
-                }
-                if (cancel_test)
-                {
-                    break; // TODO: might not be correct. Was : Exit For
-                }
+                    else if (256 > binaryData[i] & binaryData[i] > 32)
+                    {
+                        outPut += Convert.ToChar(binaryData[i]).ToString();
+                    }
+                    if (cancel_test)
+                    {
+                        break; // TODO: might not be correct. Was : Exit For
+                    }
 
-                bgw.ReportProgress(Convert.ToInt32(i / p_prog));
+                    bgw.ReportProgress(Convert.ToInt32((i / p_prog) * individualPercentage));
+                }
+                if (cancel_test == false)
+                {
+                    try
+                    {
+
+                        System.IO.File.WriteAllText(targetFName, outPut, System.Text.Encoding.UTF8);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+
+                    Remove_Spaces();
+
+                    //MessageBox.Show("Done");
+                    outPut = " ";
+                    outPut_Sp = "";
+                    start_test = false;
+                }
             }
-            if (cancel_test == false)
-            {
-                try
-                {
-                    targetFName = Path.GetDirectoryName(sourceFName) + "\\" + Path.GetFileNameWithoutExtension(sourceFName) + "_unicode.txt";
-                    System.IO.File.WriteAllText(targetFName, outPut, System.Text.Encoding.UTF8);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-
-                Remove_Spaces();
-
-                //MessageBox.Show("Done");
-                outPut = " ";
-                outPut_Sp = "";
-                start_test = false;
-            }
-
         }
 
         private int GetIndexOfNonDigit(int currentIndex)
@@ -609,16 +649,15 @@ namespace InPageToAutographa
             }
             else
             {
-                WriteStatusMessage("File is successfully converted");
                 ProgressBarValue = 0;
-                IsProgressBarVisible = false;
                 //ButtonOpenFileEnabled = true;
                 //ButtonInPageFileEnabled = true;
                 BtnConvertText = "Convert";
-
+                SourceFileNames = null;
                 USFMConverter.Converter converter = new USFMConverter.Converter();
-                converter.ApplyUSFMTagsToFiles(new List<string> { targetFName });
-
+                converter.ApplyUSFMTagsToFiles(new List<string>(targetFileNames));
+                IsProgressBarVisible = false;
+                WriteStatusMessage("All files are successfully converted and saved in the selected input file's directory.");
             }
         }
 

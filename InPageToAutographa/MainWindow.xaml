@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
-        Title="Inpage to Autographa" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Inpage to Autographa - v1.0" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <local:ConverterViewModel/>
     </Window.DataContext>
@@ -21,24 +21,27 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
             <TabItem Header="▶ About">
-                <Grid Background="#FFE5E5E5">
+                <StackPanel Background="#FFE5E5E5">
                     <TextBlock Margin="10" TextWrapping="Wrap"> This helps us to convert InPage documents to Unicoded USFM tagged .TXT documents.  </TextBlock>
-                </Grid>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> Guidelines to be followed are:</TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> 1. Please ensure that the filename is prefixed with Book ID and an underscore. eg MAT_sampleInpageFile.inp</TextBlock>
+                </StackPanel>
 
             </TabItem>
-            <TabItem  Header="⚙ InPage" Background="White">
+            <TabItem  Header="⚙ InPage to Unicoded USFM Conversion" Background="White">
                 <Grid Background="White">
                     <Grid.RowDefinitions>
+                        <!--<RowDefinition Height="*"></RowDefinition>-->
                         <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height=".75*"></RowDefinition>
-                        <RowDefinition Height=".5*"></RowDefinition>
+                        <RowDefinition Height="5*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <GroupBox Header="Correct" HorizontalAlignment="Center">
+                    <!--<WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <GroupBox Header="Correct" HorizontalAlignment="Center" >
                             <WrapPanel>
                                 <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectYearSignChecked, Mode=TwoWay}">Year Sign</CheckBox>
                                 <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectHehHamzaChecked, Mode=TwoWay}">Heh with Hamza</CheckBox>
@@ -61,16 +64,23 @@
                                 <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseQuotMarksChecked, Mode=TwoWay}">Quotation Marks</CheckBox>
                             </WrapPanel>
                         </GroupBox>
-                    </WrapPanel>
-                    <ListBox  Grid.Column="0" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="10,0,10,0" />
+                    </WrapPanel>-->
+
+                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Content="Selected InPage files:" Margin="10,10,10,10"></Label>
+                    <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"  Margin="10" ItemsSource="{Binding SourceFileNames}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch"/>
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
                         <Button Margin="10" Padding="2,3,4,5"  Command="{Binding SelectFilesCommand}" Content="Select InPage Files" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center" />
                         <Button Margin="10" Padding="2,3,4,5" Command="{Binding ConvertFilesCommand}" Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
                     </StackPanel>
                 </Grid>
 
+            </TabItem>          
+            <TabItem Header="✪ FAQ">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock Margin="10" TextWrapping="Wrap">Detailed set of topical guidelines can go here as a FAQ section.</TextBlock>
+                </Grid>
             </TabItem>
-            <TabItem Header="⚙ USFM">
+            <TabItem Header="⚙ USFM" Visibility="Hidden">
                 <Grid Background="White">
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
@@ -93,7 +103,7 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="◫ Output">
+            <TabItem Header="◫ Output" Visibility="Hidden">
                 <Grid Background="White">
                     <Grid.RowDefinitions>
                         <RowDefinition Height=".25*"></RowDefinition>
@@ -106,12 +116,6 @@
                     <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Recently Converted Files</TextBlock>
                     <ListBox  HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Margin="10,0,10,0" />
 
-                </Grid>
-
-            </TabItem>
-            <TabItem Header="✪ FAQ">
-                <Grid Background="#FFE5E5E5">
-                    <TextBlock Margin="10" TextWrapping="Wrap">Detailed set of topical guidelines can go here as a FAQ section.</TextBlock>
                 </Grid>
 
             </TabItem>
