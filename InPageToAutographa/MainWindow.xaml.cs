@@ -23,6 +23,7 @@ namespace InPageToAutographa
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new ConverterViewModel();
         }
     }
 }

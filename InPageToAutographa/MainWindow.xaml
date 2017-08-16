@@ -6,9 +6,6 @@
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
         Title="Inpage to Autographa - v1.0" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <local:ConverterViewModel/>
-    </Window.DataContext>
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,15 +13,15 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height=".05*"></RowDefinition>
-            <RowDefinition Height=".1*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
             <TabItem Header="▶ About">
                 <StackPanel Background="#FFE5E5E5">
                     <TextBlock Margin="10" TextWrapping="Wrap"> This helps us to convert InPage documents to Unicoded USFM tagged .TXT documents.  </TextBlock>
-                    <TextBlock Margin="10" TextWrapping="Wrap"> Guidelines to be followed are:</TextBlock>
-                    <TextBlock Margin="10" TextWrapping="Wrap"> 1. Please ensure that the filename is prefixed with Book ID and an underscore. eg MAT_sampleInpageFile.inp</TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> For a successful conversion, please follow the below given guidelines:</TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> 1. Please ensure that the source filename is prefixed with Book ID and an underscore. eg MAT_sampleInpageFile.inp</TextBlock>
                 </StackPanel>
 
             </TabItem>
@@ -120,7 +117,7 @@
 
             </TabItem>
         </TabControl>
-        <ProgressBar Grid.Row="1" Value="{Binding ProgressBarValue}" Visibility="{Binding IsProgressBarVisible}"></ProgressBar>
-        <Label HorizontalAlignment="Center" Grid.Row="2" Content="{Binding StatusBarText}" Foreground="Blue"></Label>
+        <ProgressBar Grid.Row="1" Value="{Binding ProgressBarValue}" Visibility="{Binding IsProgressBarVisible}" MinHeight="10"></ProgressBar>
+        <TextBlock TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" Grid.Row="2" Text="{Binding StatusBarText}" Foreground="Blue" />
     </Grid>
 </Window>

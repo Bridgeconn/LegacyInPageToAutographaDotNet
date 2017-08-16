@@ -16,7 +16,7 @@ namespace USFMConverter
         private bool isTitleContainsChapter;
         private Regex digitsWithDotOrHyphen = new Regex(@"([ \.\-]*(\d+)[ \.\-]*)");
 
-        public List<string> ApplyUSFMTagsToFiles(List<string> fileList)
+        public List<string> ApplyUSFMTagsToFiles(List<string> fileList, ref string errorMessage)
         {
             List<string> newFileList = new List<string>();
 
@@ -24,7 +24,10 @@ namespace USFMConverter
             {
                 var newFileName = GetNewFileName(fileName);
                 newFileList.Add(newFileName);
-                ApplyUSFMTags(fileName, newFileName);
+                if(!ApplyUSFMTags(fileName, newFileName))
+                {
+                    errorMessage += " " + "Book id error: " + fileName  + " ";
+                }
                 ResetCounters();
             }
 
@@ -42,13 +45,18 @@ namespace USFMConverter
         private bool ApplyUSFMTags(string sourceFilename, string targetFileName)
         {
             var id = GetFileID(targetFileName);
+            if (id.Length > 3)
+            {
+                return false;
+            }
+
             File.WriteAllLines(targetFileName, File.ReadAllLines(sourceFilename).Select(line => GetProcessedLine(line, id)).ToArray(), Encoding.UTF8);
             return true;
         }
 
         private string GetFileID(string targetFileName)
         {
-            string id = "No ID has been prefixed in the filename with an underscore";
+            string id = "No book ID has been prefixed in the filename with an underscore";
             var fileName = Path.GetFileName(targetFileName);
             if (fileName.IndexOf('_') == 3)
             {
@@ -60,11 +68,19 @@ namespace USFMConverter
 
         private string GetNewFileName(string fileName)
         {
-            return Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName) + "_usfm.txt";
+            return Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName) + "_usfm.usfm";
         }
 
         private string GetProcessedLine(string line, string id)
         {
+            line = line.Trim();
+            line = line.Replace("\t", " ");
+
+            if (line.IndexOf("۔")==0)
+            {
+                line = line.Substring(1) + "۔";
+            }
+
             if (line.Trim() == string.Empty)
             {
                 return line;

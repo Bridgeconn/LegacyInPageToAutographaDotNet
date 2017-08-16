@@ -238,6 +238,28 @@ namespace InPageToAutographa
             StatusBarText = message;
         }
 
+        private bool CheckBookNamePrefixes(string[] fileNames)
+        {
+            bool isValid = true;
+
+            foreach (string fileName in fileNames)
+            {
+                if(Path.GetFileNameWithoutExtension(fileName).IndexOf('_') != 3)
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (!isValid)
+            {
+                WriteStatusMessage("No book ID has been prefixed in the filename with an underscore as stated in the guidelines in the about section. Please modify file name(s).");
+                return false;
+            }
+
+            return isValid;
+        }
+
         private void btnOpenDlg_Click()
         {
             OpenFileDialog OFD = new OpenFileDialog();
@@ -257,7 +279,7 @@ namespace InPageToAutographa
                     //ButtonOpenFileEnabled = false;
                     //btnFConvert.Enabled = false;
                 }
-                else
+                else if(CheckBookNamePrefixes(OFD.FileNames))
                 {
                     FileListTitle = "Source files";
                     //txtSourceLocation.Text = OFD.FileName;
@@ -268,6 +290,7 @@ namespace InPageToAutographa
                     //ButtonInPageFileEnabled = false;
                     //ButtonOpenFileEnabled = false;
                 }
+                
             }
             else
             {
@@ -320,7 +343,7 @@ namespace InPageToAutographa
         private void bgw_DoWork(System.Object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             int individualPercentage = 100 / inputFileNames.Length;
-
+            targetFileNames.Clear();
             foreach (var fileName in inputFileNames)
             {
                 sourceFName = fileName;
@@ -655,9 +678,13 @@ namespace InPageToAutographa
                 BtnConvertText = "Convert";
                 SourceFileNames = null;
                 USFMConverter.Converter converter = new USFMConverter.Converter();
-                converter.ApplyUSFMTagsToFiles(new List<string>(targetFileNames));
+                string errorMessage = "";
+                converter.ApplyUSFMTagsToFiles(new List<string>(targetFileNames), ref errorMessage);
                 IsProgressBarVisible = false;
-                WriteStatusMessage("All files are successfully converted and saved in the selected input file's directory.");
+                if (string.IsNullOrEmpty(errorMessage))
+                    WriteStatusMessage("All files are successfully converted and saved in the selected input file's directory.");
+                else
+                    WriteStatusMessage("Please read about section for guidelines - encountered errors while converting:: " + errorMessage);
             }
         }
 
