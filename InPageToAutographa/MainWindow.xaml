@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
-        Title="Inpage to Autographa - v1.0" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Inpage to Autographa - v1.1" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     
     <Grid>
         <Grid.ColumnDefinitions>
