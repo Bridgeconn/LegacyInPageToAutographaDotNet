@@ -14,6 +14,7 @@ namespace USFMConverter
         private short chapterCounter=0;
         private short verseCounter=0;
         private bool isTitleContainsChapter;
+        private Regex digits = new Regex(@"((\d+))");
         private Regex digitsWithDotOrHyphen = new Regex(@"([ \.\-]*(\d+)[ \.\-]*)");
 
         public List<string> ApplyUSFMTagsToFiles(List<string> fileList, ref string errorMessage)
@@ -50,7 +51,17 @@ namespace USFMConverter
                 return false;
             }
 
-            File.WriteAllLines(targetFileName, File.ReadAllLines(sourceFilename).Select(line => GetProcessedLine(line, id)).ToArray(), Encoding.UTF8);
+            StringBuilder sb = new StringBuilder();
+            StreamReader file = new StreamReader(sourceFilename);
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                GetProcessedLine(sb, line, id);
+            }
+
+            file.Close();
+            
+            File.WriteAllText(targetFileName, sb.ToString(), Encoding.UTF8);
             return true;
         }
 
@@ -71,7 +82,7 @@ namespace USFMConverter
             return Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName) + "_usfm.usfm";
         }
 
-        private string GetProcessedLine(string line, string id)
+        private void GetProcessedLine(StringBuilder sb, string line, string id)
         {
             line = line.Trim();
             line = line.Replace("\t", " ");
@@ -83,7 +94,7 @@ namespace USFMConverter
 
             if (line.Trim() == string.Empty)
             {
-                return line;
+                return;
             }
 
             if (!IsIDAdded)
@@ -92,22 +103,28 @@ namespace USFMConverter
                 if (AddIDUSFMTag(ref newline, id))
                 {
                     AddChapterUSFMTag(ref line);
-                    return newline + Environment.NewLine + line;
+                    sb.AppendLine(newline + Environment.NewLine + line);
                 }
             }
             else
             {
                 if (AddChapterUSFMTag(ref line))
                 {
-                    return line;
+                    sb.AppendLine(line);
                 }
                 else if (AddVerseUSFMTag(ref line))
                 {
-                    return line;
+                    line = Regex.Replace(line, @"\t|\n|\r", "");
+                    line = line.Replace(Environment.NewLine, "");
+                    sb.Append(Environment.NewLine + line);
+                }
+                else
+                {
+                    line = Regex.Replace(line, @"\t|\n|\r", "");
+                    line = line.Replace(Environment.NewLine, "");
+                    sb.Append(line);
                 }
             }
-
-            return line; 
         }
 
         private bool AddIDUSFMTag(ref string line, string id)
@@ -144,9 +161,9 @@ namespace USFMConverter
         {
             if (verseCounter == 0 && chapterCounter == 0)
             {
-                if (digitsWithDotOrHyphen.IsMatch(line))
+                if (digits.IsMatch(line))
                 {
-                    line = digitsWithDotOrHyphen.Replace(line, "");
+                    line = digits.Replace(line, "");
 
                     line = "\\c " + ++chapterCounter + " " + line;
 
@@ -158,9 +175,9 @@ namespace USFMConverter
             else
             {
                 // number found and compare with above
-                if (digitsWithDotOrHyphen.IsMatch(line))
+                if (digits.IsMatch(line))
                 {
-                    Match matches = Regex.Match(line, digitsWithDotOrHyphen.ToString());
+                    Match matches = Regex.Match(line, digits.ToString());
                     if (matches.Success)
                     {
                         // TODO: special case if (groups.Count > 1)
@@ -169,7 +186,7 @@ namespace USFMConverter
 
                         if (chapterNumber == chapterCounter + 1 && chapterNumber != verseCounter + 1)
                         {
-                            line = digitsWithDotOrHyphen.Replace(line, "");
+                            line = digits.Replace(line, "");
                             line = "\\c " + ++chapterCounter + " " + line;
                             verseCounter = 0;
                             return true;
@@ -187,7 +204,7 @@ namespace USFMConverter
             if(IsIDAdded && chapterCounter>0)
             {
                 // number found and compare with above
-                Match matches = Regex.Match(line, digitsWithDotOrHyphen.ToString());
+                Match matches = Regex.Match(line, digits.ToString());
 
                 if (matches.Success)
                 {
@@ -198,7 +215,9 @@ namespace USFMConverter
 
                         if (verseNumber >= verseCounter + 1)
                         {
-                            line = digitsWithDotOrHyphen.Replace(line, "");
+                            line = digits.Replace(line, "");
+                            line = Regex.Replace(line, @"\t|\n|\r", "");
+                            line = line.Replace(Environment.NewLine, "");
                             line = "\\v " + ++verseCounter + " " + line;
                             
                         }
