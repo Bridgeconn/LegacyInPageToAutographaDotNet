@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
-        Title="Inpage to Autographa - v1.1" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Convert Inpage or Text Files to Autographa - v1.2" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -19,9 +19,9 @@
         <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
             <TabItem Header="▶ About">
                 <StackPanel Background="#FFE5E5E5">
-                    <TextBlock Margin="10" TextWrapping="Wrap"> This helps us to convert InPage documents to Unicoded USFM tagged .TXT documents.  </TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> This helps us to convert InPage documents to Unicoded USFM tagged .TXT documents or Txt files to USFM documents.  </TextBlock>
                     <TextBlock Margin="10" TextWrapping="Wrap"> For a successful conversion, please follow the below given guidelines:</TextBlock>
-                    <TextBlock Margin="10" TextWrapping="Wrap"> 1. Please ensure that the source filename is prefixed with Book ID and an underscore. eg MAT_sampleInpageFile.inp</TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap"> 1. Please ensure that the source filename is prefixed with Book ID and an underscore. eg MAT_sampleInpageFile.inp or PHM_sampleInpageFile.txt</TextBlock>
                 </StackPanel>
 
             </TabItem>
@@ -71,7 +71,54 @@
                     </StackPanel>
                 </Grid>
 
-            </TabItem>          
+            </TabItem>
+            <TabItem  Header="⚙ TXT to USFM Conversion" Background="White">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <!--<RowDefinition Height="*"></RowDefinition>-->
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="5*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!--<WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <GroupBox Header="Correct" HorizontalAlignment="Center" >
+                            <WrapPanel>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectYearSignChecked, Mode=TwoWay}">Year Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectHehHamzaChecked, Mode=TwoWay}">Heh with Hamza</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectWawHamzaChecked, Mode=TwoWay}">Waw with Hamza</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxCorrectBariYeeChecked    , Mode=TwoWay}">Bari Ya</CheckBox>
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox Header="Remove" HorizontalAlignment="Center">
+                            <WrapPanel>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRemoveDoubleSpaceChecked, Mode=TwoWay}">Double Space</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRemoveKashidaChecked, Mode=TwoWay}">Kashida Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxRemoveErabsChecked, Mode=TwoWay}">All Erabs</CheckBox>
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox Header="Reverse" HorizontalAlignment="Center">
+                            <WrapPanel>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseNumbersDigitsChecked, Mode=TwoWay}">Numbers / Digits</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseSolidusSignChecked, Mode=TwoWay}">Solidus (/) Sign</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseThousSeparatorChecked, Mode=TwoWay}">Thousands Seperator</CheckBox>
+                                <CheckBox Margin="10" IsChecked="{Binding Path=CheckboxReverseQuotMarksChecked, Mode=TwoWay}">Quotation Marks</CheckBox>
+                            </WrapPanel>
+                        </GroupBox>
+                    </WrapPanel>-->
+
+                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Content="Selected Text files:" Margin="10,10,10,10"></Label>
+                    <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"  Margin="10" ItemsSource="{Binding SourceFileNames}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch"/>
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
+                        <Button Margin="10" Padding="2,3,4,5"  Command="{Binding SelectTxtFilesCommand}" Content="Select TXT Files" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center" />
+                        <Button Margin="10" Padding="2,3,4,5" Command="{Binding ConvertTxtFilesCommand}" Content="▶ Proceed" HorizontalAlignment="Center"  VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+            </TabItem>
             <TabItem Header="✪ FAQ">
                 <Grid Background="#FFE5E5E5">
                     <TextBlock Margin="10" TextWrapping="Wrap">Detailed set of topical guidelines can go here as a FAQ section.</TextBlock>

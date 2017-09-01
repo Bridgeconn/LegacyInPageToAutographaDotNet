@@ -129,6 +129,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -163,7 +171,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:USFMConverter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:USFMConverter, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2628A87F87EA647B58FCB66863767F42"
@@ -245,7 +253,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:UnicodeConverter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:UnicodeConverter, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B0CCB1E5BCC7E22D808EB6B7E119482C"
@@ -327,7 +335,7 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:InPageToAutographa"
+        "ProductName" = "8:InPageOrTextFilesToAutographa"
         "ProductCode" = "8:{4BF47201-D01A-4FFE-A693-AA5ED418FBF0}"
         "PackageCode" = "8:{14A1C527-F8FA-4A3A-8A2C-1049FA4EDEA1}"
         "UpgradeCode" = "8:{F2D483AB-FDF2-4763-A307-24B85EAA0209}"
@@ -340,7 +348,7 @@
         "Manufacturer" = "8:Bridgeconn"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:InPageToAutographa"
+        "Title" = "8:InPage Or TextFiles To Autographa"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Bridgeconn"
         "Keywords" = "8:"
@@ -892,7 +900,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EBE56D8875324C66B2FD361CDB43A09F"
             {
-            "SourcePath" = "8:..\\InPageToAutographa\\obj\\Debug\\InPageToAutographa.exe"
+            "SourcePath" = "8:..\\InPageToAutographa\\obj\\Debug\\InPageOrTextFilesToAutographa.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_AB40A9D2518D4C1484914082A43A007D"

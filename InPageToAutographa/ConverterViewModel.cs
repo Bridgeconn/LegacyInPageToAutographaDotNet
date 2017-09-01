@@ -262,6 +262,7 @@ namespace InPageToAutographa
 
         private void btnOpenDlg_Click()
         {
+            ProgressBarValue = 0;
             OpenFileDialog OFD = new OpenFileDialog();
             OFD.Filter = "Inpage files (*.inp)|*.inp";
             OFD.Title = "Open inpage file";
@@ -332,6 +333,97 @@ namespace InPageToAutographa
                     bgw.RunWorkerCompleted += bgw_RunWorkerCompleted;
                     bgw.RunWorkerAsync();
 
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        public ICommand ConvertTxtFilesCommand
+        {
+            get { return new DelegateCommand(btnTxtConvert_Click); }
+        }
+
+        public ICommand SelectTxtFilesCommand
+        {
+            get { return new DelegateCommand(btnTxtOpenDlg_Click); }
+        }
+
+        private void btnTxtOpenDlg_Click()
+        {
+            ProgressBarValue = 0;
+            OpenFileDialog OFD = new OpenFileDialog();
+            OFD.Filter = "Text files (*.txt)|*.txt";
+            OFD.Title = "Open text file";
+            OFD.Multiselect = true;
+
+            if (OFD.ShowDialog() == true)
+            {
+                if (OFD.FileNames.Length == 0 || !(Path.GetExtension(OFD.FileName) == ".txt" | Path.GetExtension(OFD.FileName) == ".TXT"))
+                {
+                    WriteStatusMessage("Please select a valid text file");
+
+                    //txtSourceLocation.Text = "";
+                    //txtTatgetLocation.Text = "";
+                    //ButtonConvertEnabled = false;
+                    //ButtonOpenFileEnabled = false;
+                    //btnFConvert.Enabled = false;
+                }
+                else if (CheckBookNamePrefixes(OFD.FileNames))
+                {
+                    FileListTitle = "Source files";
+                    //txtSourceLocation.Text = OFD.FileName;
+                    SourceFileNames = OFD.FileNames;
+                    WriteStatusMessage("Ready to convert, please click proceed button");
+                    //ButtonConvertEnabled = true;
+                    //btnFConvert.Enabled = true;
+                    //ButtonInPageFileEnabled = false;
+                    //ButtonOpenFileEnabled = false;
+                }
+
+            }
+            else
+            {
+                WriteStatusMessage("Ready");
+            }
+        }
+        private void btnTxtConvert_Click()
+        {
+            if (BtnConvertText == "Cancel")
+            {
+                MessageBoxResult msgResult = MessageBox.Show("Do you want cancel the converting?", "Cancel ?", MessageBoxButton.YesNo);
+                if (msgResult == MessageBoxResult.Yes)
+                {
+                    cancel_test = true;
+                    BtnConvertText = "Convert";
+                }
+            }
+            else
+            {
+                try
+                {
+                    IsProgressBarVisible = true;
+                    progressBarValue = 0;
+                    BtnConvertText = "Cancel";
+                    USFMConverter.Converter converter = new USFMConverter.Converter();
+                    string errorMessage = "";
+
+                    for (int i = 0; i < SourceFileNames.Count(); i++)
+                    {
+                        string[] newList = new string[] { SourceFileNames[i] };
+                        converter.ApplyUSFMTagsToFiles(new List<string>(newList), ref errorMessage);
+                        ProgressBarValue = (int)(((double)(i+1)/ (double)SourceFileNames.Count()) * 100);
+                    }
+
+                    SourceFileNames = null;
+                    IsProgressBarVisible = false;
+                    BtnConvertText = "Convert";
+                    if (string.IsNullOrEmpty(errorMessage))
+                        WriteStatusMessage("All files are successfully converted and saved in the selected input file's directory.");
+                    else
+                        WriteStatusMessage("Please read about section for guidelines - encountered errors while converting:: " + errorMessage);
                 }
                 catch (Exception ex)
                 {
@@ -605,7 +697,7 @@ namespace InPageToAutographa
                         break; // TODO: might not be correct. Was : Exit For
                     }
 
-                    bgw.ReportProgress(Convert.ToInt32((i / p_prog) * individualPercentage));
+                    bgw.ReportProgress(Convert.ToInt32((i / p_prog) * individualPercentage)/100);
                 }
                 if (cancel_test == false)
                 {
@@ -619,7 +711,7 @@ namespace InPageToAutographa
                         MessageBox.Show(ex.Message);
                     }
 
-                    Remove_Spaces();
+                    //Remove_Spaces();
 
                     //MessageBox.Show("Done");
                     outPut = " ";
@@ -672,7 +764,6 @@ namespace InPageToAutographa
             }
             else
             {
-                ProgressBarValue = 0;
                 //ButtonOpenFileEnabled = true;
                 //ButtonInPageFileEnabled = true;
                 BtnConvertText = "Convert";
@@ -681,6 +772,7 @@ namespace InPageToAutographa
                 string errorMessage = "";
                 converter.ApplyUSFMTagsToFiles(new List<string>(targetFileNames), ref errorMessage);
                 IsProgressBarVisible = false;
+                ProgressBarValue = 100;
                 if (string.IsNullOrEmpty(errorMessage))
                     WriteStatusMessage("All files are successfully converted and saved in the selected input file's directory.");
                 else
