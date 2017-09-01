@@ -171,7 +171,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:USFMConverter, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:USFMConverter, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2628A87F87EA647B58FCB66863767F42"
@@ -253,7 +253,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:UnicodeConverter, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:UnicodeConverter, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B0CCB1E5BCC7E22D808EB6B7E119482C"
@@ -337,7 +337,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:InPageOrTextFilesToAutographa"
         "ProductCode" = "8:{4BF47201-D01A-4FFE-A693-AA5ED418FBF0}"
-        "PackageCode" = "8:{14A1C527-F8FA-4A3A-8A2C-1049FA4EDEA1}"
+        "PackageCode" = "8:{11E9E54B-3DEC-4D4F-AF40-9329ECEF1F49}"
         "UpgradeCode" = "8:{F2D483AB-FDF2-4763-A307-24B85EAA0209}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -459,7 +459,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_644E47DC388541AE925541A6F07BEC04"
             {
-            "Name" = "8:InPageToAutographa"
+            "Name" = "8:InPageOrTextFilesToAutographa"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -473,7 +473,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_94F6A965E1974BB4AA9CCF0F1DAFD8E2"
             {
-            "Name" = "8:InPageToAutographa"
+            "Name" = "8:InPageOrTextFilesToAutographa"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -487,7 +487,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C116476E444347238D53F123FCBB811D"
             {
-            "Name" = "8:InPageToAutographa"
+            "Name" = "8:InPageOrTextFilesToAutographa"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"

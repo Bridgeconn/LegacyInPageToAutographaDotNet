@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InPageToAutographa"
         mc:Ignorable="d"
-        Title="Convert Inpage or Text Files to Autographa - v1.2" Height="500" Width="580" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Convert InPage or Text Files to Autographa - v1.2" Height="500" Width="620" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -119,11 +119,11 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="✪ FAQ">
+            <!--<TabItem Header="✪ FAQ">
                 <Grid Background="#FFE5E5E5">
                     <TextBlock Margin="10" TextWrapping="Wrap">Detailed set of topical guidelines can go here as a FAQ section.</TextBlock>
                 </Grid>
-            </TabItem>
+            </TabItem>-->
             <TabItem Header="⚙ USFM" Visibility="Hidden">
                 <Grid Background="White">
                     <Grid.RowDefinitions>
